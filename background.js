@@ -77,7 +77,7 @@ const patterns = [
         'bannerPattern',
         "^https?://banner.ptc.edu/PROD/(bwlkfmgd.P_Fac(Commit)?MidGrd*|bwlkffgd.P_Fac(Commit)?FinGrd*)",
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/fetch-grades-fg.js',
-            './popup/Banner Grade Importer/banner-grade-importer-styles.css'],
+            './popup/PTC Tools/banner-grade-importer-styles.css'],
         "./injected-only.html"
     ),
     new PagePattern(
