@@ -41,13 +41,13 @@ Easily create attendance registers by selecting start date, end date, and meetin
 1. From the new register page click the Chrome Extension Icon
 2. Select the Start Date
 3. Select the End Date
-4. Click which day or days of the week meetings should occur
+4. Click which day or days of the week meetings should occur\
    [![Attendance Register Generator UI fully completed][6]][6]
 5. Click Generate
-6. Give the Register a title
+6. Give the Register a title\
    [![Name input field filled with sample register name][7]][7]
 7. Alter any dates as needed
-8. Save the Register
+8. Save the Register\
    [![Register Save Button][8]][8]
 
 
