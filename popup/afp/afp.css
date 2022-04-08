@@ -1,0 +1,63 @@
+/***
+@preserve
+
+author: Henry Ecker
+*/
+:root {
+    --border-color: #494c4e;
+    --button-blue-color: #006fbf;
+    --border-style: 1px solid #ccc5;
+}
+
+#d2l_attendance_from_participation_mount_point {
+    margin: 10px 0;
+    border: var(--border-style);
+    border-radius: 10px;
+}
+
+#d2l_attendance_from_participation_mount_point h2 {
+    font-style: normal;
+    margin: 10px;
+    padding: 0;
+    font-size: 18pt;
+}
+
+
+#d2l_attendance_from_participation_mount_point table {
+    border-collapse: collapse;
+}
+
+#d2l_attendance_from_participation_mount_point tr {
+    border: var(--border-style);
+}
+
+#d2l_attendance_from_participation_mount_point th {
+    text-align: center;
+}
+
+#d2l_attendance_from_participation_mount_point td {
+    padding-left: 10px;
+}
+
+#d2l_attendance_from_participation_mount_point td:not(:last-child) {
+    border-right: var(--border-style);
+}
+
+#d2l_attendance_from_participation_mount_point select {
+    width: 100px;
+    height: 25px;
+}
+
+
+#d2l_attendance_from_participation_mount_point input[type=checkbox] {
+    width: 15px !important;
+    height: 15px !important;
+}
+
+#d2l_attendance_from_participation_mount_point label {
+    margin: 10px;
+}
+
+#d2l_attendance_from_participation_mount_point button {
+    margin-top: 10px;
+}

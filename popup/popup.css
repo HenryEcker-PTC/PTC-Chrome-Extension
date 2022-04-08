@@ -1,0 +1,13 @@
+body {
+    background-color: lightblue;
+    width: 300px;
+}
+
+.title {
+    text-align: center;
+    font-size: 13pt;
+}
+
+.grid-container {
+    background-color: white;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "PTC Tools",
+  "description": "Collection of Tools For PTC",
+  "version": "1.1.2",
+  "manifest_version": 3,
+  "key": "aelhbikadpfbloieenjjonodemmaekfd",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "./popup/popup.html"
+  },
+  "options_page": "./options/options.html",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://banner.ptc.edu/PROD/*",
+    "https://ptcsc.desire2learn.com/d2l/api/*"
+  ]
+}

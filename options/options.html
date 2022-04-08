@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grading Options</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .grid-container {
+            width: 450px;
+        }
+    </style>
+</head>
+<body>
+<h1>Here Grade Configurations can be set</h1>
+<p>In the input field input the <i>lowest</i> possible score to obtain the letter grade. (Inclusive)</p>
+<div class="grid-container">
+    <div>
+        <h2>Final Grade Scores</h2>
+        <form>
+            <table>
+                <tbody>
+                <tr>
+                    <td><label for="A">A</label></td>
+                    <td><input id="A" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="B">B</label></td>
+                    <td><input id="B" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="C">C</label></td>
+                    <td><input id="C" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="D">D</label></td>
+                    <td><input id="D" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="F">F</label></td>
+                    <td><input id="F" disabled placeholder="F is anything below D"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div>
+        <h2>Midterm Grade Scores</h2>
+        <form>
+            <table>
+                <tbody>
+                <tr>
+                    <td><label for="S">S</label></td>
+                    <td><input id="S" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="M">M</label></td>
+                    <td><input id="M" type="number"/></td>
+                </tr>
+                <tr>
+                    <td><label for="U">U</label></td>
+                    <td><input id="U" disabled placeholder="U is anything below M"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="centered-colspan-container">
+        <label>Final Grades are adjusted</label><input type="checkbox" id="adjusted"/>
+    </div>
+    <div class="centered-colspan-container">
+        <button id="updateBtn">Update Preferences</button>
+    </div>
+</div>
+
+
+<script src="options-script.js"></script>
+</body>
+</html>

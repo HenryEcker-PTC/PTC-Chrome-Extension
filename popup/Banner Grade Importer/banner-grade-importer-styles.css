@@ -1,0 +1,35 @@
+.complete-container-fg {
+    width: 350px;
+}
+
+.complete-container-fg .input-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.complete-container-fg .btn-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 10px 0;
+}
+
+
+.complete-container-fg .radio-container {
+    display: grid;
+    grid-template-columns: 25px 1fr;
+    grid-row-gap: 2px;
+    margin: 5px 0;
+}
+
+.complete-container-fg .centered-colspan-container {
+    grid-column: 1 /  span 2;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.complete-container-fg .subtitle {
+    font-size: 11px;
+    margin: 2px 0;
+}
