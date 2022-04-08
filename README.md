@@ -8,7 +8,7 @@ A collection of tools packaged into a Chrome extension that makes many routine t
 
 ### Easy Set Adjusted Grades
 
-Adds a button to the bottom of the Final Grade entry window which transfers all grades current grades to the adjusted grades column with a single click.
+Adds a "Set Adjusted" button to the bottom of the Final Grade entry window which transfers all grades current grades to the adjusted grades column with a single click.
 
 [![Set Adjusted Button added to Final Grade UI][1]][1]
 
@@ -18,13 +18,13 @@ If Final Grades are adjusted is selected (in Extension options) then all grades 
 
 ### Easy Enter Zeros
 
-Adds a button to the bottom of the any grade entry window that will zero any missing grades with a single click.
+Adds a "Fill Missing" button to the bottom of the any grade entry window that will zero any missing grades with a single click.
 
 [![Fill Missing Button added to any grade entry in grades][3]][3]
 
 ### Easy Enter Absents
 
-Adds a button to the bottom of any attendance entry to fill any missing attendance entries with "Absent"
+Adds a "Default Absent" button to the bottom of any attendance entry to fill any missing attendance entries with "Absent"
 
 [![Default Absent Button added to any attendance entry][4]][4]
 
