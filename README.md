@@ -65,6 +65,12 @@ Easily set attendance based on completion of tasks
 5. Click Save or Close (and Save)
    
 
+### Easy Access Grading Feedback
+
+When grading assignments click the Chrome Extension Icon to easily access common feedbacks that can be easily copied.
+
+[![Common Feedback UI][10]][10]
+
 
  [1]: ./screenshots/set_adjusted_grade_button.png
  [2]: ./screenshots/final_grades_are_adjusted.png
@@ -75,3 +81,4 @@ Easily set attendance based on completion of tasks
  [7]: ./screenshots/arg/register_name.png
  [8]: ./screenshots/arg/register_save.png
  [9]: ./screenshots/afp/attedance_from_participation_ui.png
+ [10]: ./screenshots/grading_feedback/Basic_Grading_Feedback.png
