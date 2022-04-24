@@ -75,7 +75,7 @@ const injectScripts = (tabId, files) => {
 const patterns = [
     new PagePattern(
         'bannerPattern',
-        "^https?://banner.ptc.edu/PROD/(bwlkfmgd.P_Fac(Commit)?MidGrd*|bwlkffgd.P_Fac(Commit)?FinGrd*)",
+        "^https?://banner.ptc.edu/FacultySelfService/ssb/GradeEntry#/*",
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/fetch-grades-fg.js',
             './popup/PTC Tools/banner-grade-importer-styles.css'],
         "./injected-only.html"
