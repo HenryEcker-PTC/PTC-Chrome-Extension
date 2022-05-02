@@ -108,7 +108,13 @@ const patterns = [
     new PagePattern(
         'enterZeroForMissingGrades',
         "^https?://ptcsc.desire2learn.com/d2l/lms/grades/admin/enter/grade_item_edit.d2l*",
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-fg.js'],
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-grade-item-fg.js'],
+        "./injected-only.html"
+    ),
+    new PagePattern(
+        'enterZeroForMissingGradebook',
+        "^https?://ptcsc.desire2learn.com/d2l/lms/grades/admin/enter/user_list_view.d2l*",
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-gradebook-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
