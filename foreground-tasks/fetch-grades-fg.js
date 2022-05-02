@@ -28,21 +28,25 @@ const fetchGrades = (ev) => {
         isFinal: finalGrade
     }, (res) => {
         console.log(res); // Should log
-        // const expectedElementCount = finalGrade ? 12 : 10;
-        // let trs = $(dataTableSelector).find('tr');
-        // trs = trs.filter((i, e) => $(e)[0].childElementCount === expectedElementCount);
-        // trs.each((i, e) => {
-        //     const td = $(e).find('td');
-        //     const pNum = td.eq(2).text();
-        //     if (pNum) {
-        //         if (pNum in res) {
-        //             td.eq(5).find('select').val(res[pNum].score);
-        //             if (finalGrade && res[pNum].score === "F") {
-        //                 td.eq(7).find('input').val(getFormattedDate(new Date(res[pNum].lastDate)));
-        //             }
-        //         }
-        //     }
-        // });
+        const gradeFieldSelector = finalGrade ? 'td[data-name="grade"]' : 'td[data-name="gradeMidTerm"]';
+        const trs = $('table[aria-labelledby="finalGradeCourseRosterDetail-caption"] tr.ng-scope');
+        trs.each((idx, elem) => {
+            const jQElem = $(elem);
+            const gradeInputSelect = jQElem.find(`${gradeFieldSelector} select`);
+            const pNum = jQElem.find('td[data-name="bannerId"] span').text();
+            if (pNum) {
+                if (pNum in res) {
+                    const score = res[pNum].score;
+                    gradeInputSelect.val(score).change();
+                    gradeInputSelect[0].dispatchEvent(new Event("change"));
+                    if (finalGrade && (score === 'F')) {
+                        const dateInput = jQElem.find('td[data-name="lastAttendance"] input');
+                        dateInput.val(getFormattedDate(new Date(res[pNum].lastDate)));
+                        dateInput[0].dispatchEvent(new Event("change"));
+                    }
+                }
+            }
+        });
         const success = !(res && Object.keys(res).length === 0);
         const d2lIDinput = document.getElementById(myInputFieldId);
         if (success) {
@@ -77,7 +81,7 @@ const newStructure = $(`<form id="importer-form" class="component-content" style
 // Submit Handler
 newStructure.on('submit', fetchGrades)
 // Div to Add
-const div = $('<div class="component-top"></div>')
+const div = $('<div class="content" style="height: min-content;"></div>')
 div.append($('<div class="app-header"><h2 style="margin: 10px;">Easy Import Grades</h2></div>'))
 div.append(newStructure);
 
