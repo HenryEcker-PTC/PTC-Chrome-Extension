@@ -18,7 +18,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://banner.ptc.edu/PROD/*",
+    "https://banner.ptc.edu/FacultySelfService/*",
     "https://ptcsc.desire2learn.com/d2l/api/*"
   ]
 }
