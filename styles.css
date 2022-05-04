@@ -19,3 +19,8 @@
     background-color: white;
     padding: 10px;
 }
+
+.min-content {
+    width: min-content;
+    height: min-content;
+}

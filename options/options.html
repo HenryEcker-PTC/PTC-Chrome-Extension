@@ -5,74 +5,109 @@
     <title>Grading Options</title>
     <link rel="stylesheet" href="../styles.css">
     <style>
-        .grid-container {
-            width: 450px;
+        .flex-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 10px
+        }
+
+        .side-by-side-form {
+            display: grid;
+            grid-template-columns: 300px 25px;
+            grid-row-gap: 5px;
         }
     </style>
 </head>
 <body>
-<h1>Here Grade Configurations can be set</h1>
-<p>In the input field input the <i>lowest</i> possible score to obtain the letter grade. (Inclusive)</p>
-<div class="grid-container">
-    <div>
-        <h2>Final Grade Scores</h2>
-        <form>
-            <table>
-                <tbody>
-                <tr>
-                    <td><label for="A">A</label></td>
-                    <td><input id="A" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="B">B</label></td>
-                    <td><input id="B" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="C">C</label></td>
-                    <td><input id="C" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="D">D</label></td>
-                    <td><input id="D" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="F">F</label></td>
-                    <td><input id="F" disabled placeholder="F is anything below D"/></td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+<div class="flex-wrapper">
+    <div class="container min-content">
+        <h1>Enable/Disable Tools</h1>
+        <div class="grid-container">
+            <form class="side-by-side-form">
+                <label for="bannerPattern">Banner Grade Importer</label><input type="checkbox" id="bannerPattern"/>
+                <label for="enterFinalGradeD2LPattern">Set Adjusted Grades</label><input type="checkbox"
+                                                                                         id="enterFinalGradeD2LPattern"/>
+                <label for="editAttendanceD2LPattern">Attendance From Participation</label><input type="checkbox"
+                                                                                                  id="editAttendanceD2LPattern"/>
+                <label for="attendanceRegisterCreateD2LPattern">Attendance Register Generator</label><input
+                    type="checkbox" id="attendanceRegisterCreateD2LPattern"/>
+                <label for="gradeFeedbackD2LPattern">Grade Feedback Helper</label><input type="checkbox"
+                                                                                         id="gradeFeedbackD2LPattern"/>
+                <label for="enterZeroForMissingGrades">Enter Zero For Missing Grade Items</label><input type="checkbox"
+                                                                                                        id="enterZeroForMissingGrades"/>
+                <label for="enterZeroForMissingGradebook">Enter Zero For Missing Gradebook</label><input type="checkbox"
+                                                                                                         id="enterZeroForMissingGradebook"/>
+                <label for="bulkDateManageForAssignments">Bulk Date Management Tool</label><input type="checkbox"
+                                                                                                  id="bulkDateManageForAssignments"/>
+            </form>
+            <div class="centered-colspan-container">
+                <button id="updateEnabledTools">Update Tool Preferences</button>
+            </div>
+        </div>
     </div>
-    <div>
-        <h2>Midterm Grade Scores</h2>
-        <form>
-            <table>
-                <tbody>
-                <tr>
-                    <td><label for="S">S</label></td>
-                    <td><input id="S" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="M">M</label></td>
-                    <td><input id="M" type="number"/></td>
-                </tr>
-                <tr>
-                    <td><label for="U">U</label></td>
-                    <td><input id="U" disabled placeholder="U is anything below M"/></td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-    <div class="centered-colspan-container">
-        <label>Final Grades are adjusted</label><input type="checkbox" id="adjusted"/>
-    </div>
-    <div class="centered-colspan-container">
-        <button id="updateBtn">Update Preferences</button>
+    <div class="container min-content">
+        <h1>Here Grade Configurations can be set</h1>
+        <p>In the input field input the <i>lowest</i> possible score to obtain the letter grade. (Inclusive)</p>
+        <div class="grid-container">
+            <div>
+                <h2>Final Grade Scores</h2>
+                <form>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><label for="A">A</label></td>
+                            <td><input id="A" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="B">B</label></td>
+                            <td><input id="B" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="C">C</label></td>
+                            <td><input id="C" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="D">D</label></td>
+                            <td><input id="D" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="F">F</label></td>
+                            <td><input id="F" disabled placeholder="F is anything below D"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div>
+                <h2>Midterm Grade Scores</h2>
+                <form>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><label for="S">S</label></td>
+                            <td><input id="S" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="M">M</label></td>
+                            <td><input id="M" type="number"/></td>
+                        </tr>
+                        <tr>
+                            <td><label for="U">U</label></td>
+                            <td><input id="U" disabled placeholder="U is anything below M"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="centered-colspan-container">
+                <label>Final Grades are adjusted</label><input type="checkbox" id="adjusted"/>
+            </div>
+            <div class="centered-colspan-container">
+                <button id="updateGradeInfoBtn">Update Preferences</button>
+            </div>
+        </div>
     </div>
 </div>
-
-
 <script src="options-script.js"></script>
 </body>
 </html>
