@@ -11,41 +11,58 @@
             gap: 10px
         }
 
-        .side-by-side-form {
+        #tool-enable-disable-form {
             display: grid;
             grid-template-columns: 300px 25px;
             grid-row-gap: 5px;
+        }
+
+        .nowrap {
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
 <div class="flex-wrapper">
-    <div class="container min-content">
+    <div class="container min-content nowrap">
         <h1>Enable/Disable Tools</h1>
         <div class="grid-container">
-            <form class="side-by-side-form">
-                <label for="bannerPattern">Banner Grade Importer</label><input type="checkbox" id="bannerPattern"/>
-                <label for="enterFinalGradeD2LPattern">Set Adjusted Grades</label><input type="checkbox"
-                                                                                         id="enterFinalGradeD2LPattern"/>
-                <label for="editAttendanceD2LPattern">Attendance From Participation</label><input type="checkbox"
-                                                                                                  id="editAttendanceD2LPattern"/>
-                <label for="attendanceRegisterCreateD2LPattern">Attendance Register Generator</label><input
-                    type="checkbox" id="attendanceRegisterCreateD2LPattern"/>
-                <label for="gradeFeedbackD2LPattern">Grade Feedback Helper</label><input type="checkbox"
-                                                                                         id="gradeFeedbackD2LPattern"/>
-                <label for="enterZeroForMissingGrades">Enter Zero For Missing Grade Items</label><input type="checkbox"
-                                                                                                        id="enterZeroForMissingGrades"/>
-                <label for="enterZeroForMissingGradebook">Enter Zero For Missing Gradebook</label><input type="checkbox"
-                                                                                                         id="enterZeroForMissingGradebook"/>
-                <label for="bulkDateManageForAssignments">Bulk Date Management Tool</label><input type="checkbox"
-                                                                                                  id="bulkDateManageForAssignments"/>
+            <form id="tool-enable-disable-form">
+                <!-- Banner -->
+                <label for="bannerPattern">Banner Grade Importer</label>
+                <input type="checkbox" id="bannerPattern"/>
+                <!-- Set Adjusted Grades -->
+                <label for="enterFinalGradeD2LPattern">Set Adjusted Grades</label>
+                <input type="checkbox" id="enterFinalGradeD2LPattern"/>
+
+                <!-- Grade Feedback Helper -->
+                <label for="gradeFeedbackD2LPattern">Grade Feedback Helper</label>
+                <input type="checkbox" id="gradeFeedbackD2LPattern"/>
+
+
+                <!-- Attendance From Participation -->
+                <label for="editAttendanceD2LPattern">Attendance From Participation</label>
+                <input type="checkbox" id="editAttendanceD2LPattern"/>
+                <!-- Attendance Register Generator -->
+                <label for="attendanceRegisterCreateD2LPattern">Attendance Register Generator</label>
+                <input type="checkbox" id="attendanceRegisterCreateD2LPattern"/>
+
+                <!-- Zero For Missing Grade Item -->
+                <label for="enterZeroForMissingGrades">Enter Zero For Missing Grade Items</label>
+                <input type="checkbox" id="enterZeroForMissingGrades"/>
+                <!-- Zero For Missing Gradebook -->
+                <label for="enterZeroForMissingGradebook">Enter Zero For Missing Gradebook</label>
+                <input type="checkbox" id="enterZeroForMissingGradebook"/>
+                <!-- Bulk Date Management Tool -->
+                <label for="bulkDateManageForAssignments">Bulk Date Management Tool</label>
+                <input type="checkbox" id="bulkDateManageForAssignments"/>
             </form>
             <div class="centered-colspan-container">
                 <button id="updateEnabledTools">Update Tool Preferences</button>
             </div>
         </div>
     </div>
-    <div class="container min-content">
+    <div class="container min-content nowrap">
         <h1>Here Grade Configurations can be set</h1>
         <p>In the input field input the <i>lowest</i> possible score to obtain the letter grade. (Inclusive)</p>
         <div class="grid-container">
