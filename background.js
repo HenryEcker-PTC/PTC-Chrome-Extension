@@ -11,7 +11,15 @@ chrome.runtime.onInstalled.addListener(() => {
         D: 70,
         S: 84,
         M: 76,
-        isAdjusted: false
+        isAdjusted: false,
+        bannerPattern: true,
+        enterFinalGradeD2LPattern: true,
+        editAttendanceD2LPattern: true,
+        attendanceRegisterCreateD2LPattern: true,
+        gradeFeedbackD2LPattern: true,
+        enterZeroForMissingGrades: true,
+        enterZeroForMissingGradebook: true,
+        bulkDateManageForAssignments: true,
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
@@ -130,12 +138,14 @@ const patterns = [
 // listener to Inject foreground script;
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
     if (changeInfo.status === 'complete') {
-        for (let pattern of patterns) {
-            if (pattern.test(tabInfo.url)) {
-                pattern.injectScripts(tabId);
-                break;
+        chrome.storage.sync.get(patterns.map(e => e.name), response => {
+            for (let pattern of patterns) {
+                if (response[pattern.name] && pattern.test(tabInfo.url)) {
+                    pattern.injectScripts(tabId);
+                    break;
+                }
             }
-        }
+        });
     }
     return true;
 });
