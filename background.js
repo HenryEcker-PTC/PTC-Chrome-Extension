@@ -39,7 +39,7 @@ chrome.runtime.onInstalled.addListener(() => {
 class PagePattern {
     constructor(name, pattern, filesToInject, UIPath) {
         this.name = name;
-        this.pattern = new RegExp(pattern);
+        this.pattern = pattern;
         this.filesToInject = filesToInject;
         this.UIPath = UIPath;
     }
@@ -83,51 +83,51 @@ const injectScripts = (tabId, files) => {
 const patterns = [
     new PagePattern(
         'bannerPattern',
-        "^https?://banner.ptc.edu/FacultySelfService/ssb/GradeEntry#/*",
+        /^https?:\/\/banner.ptc.edu\/FacultySelfService\/ssb\/GradeEntry#\/*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/fetch-grades-fg.js',
             './popup/PTC Tools/banner-grade-importer-styles.css'],
         "./injected-only.html"
     ),
     new PagePattern(
         'enterFinalGradeD2LPattern',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/grades/admin/enter/grade_final_edit.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/grades\/admin\/enter\/grade_final_edit.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/adjust-grades-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'editAttendanceD2LPattern',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/attendance/attendance/data_edit.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/attendance\/attendance\/data_edit.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/attendance_from_participation_fg.js',
             './popup/afp/afp.css'],
         "./injected-only.html"
     ),
     new PagePattern(
         'attendanceRegisterCreateD2LPattern',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/attendance/registers/registers_newedit.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/attendance\/registers\/registers_newedit.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/attendance-register-generator-fg.js'],
         "./register-gen/rg-popup.html"
     ),
     new PagePattern(
         'gradeFeedbackD2LPattern',
-        "^https?://ptcsc.desire2learn.com/d2l/le/activities/iterator/*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/le\/activities\/iterator\/*/,
         null,
         "./Common Grade Feedback Tools/common-feedback-popup.html"
     ),
     new PagePattern(
         'enterZeroForMissingGrades',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/grades/admin/enter/grade_item_edit.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/grades\/admin\/enter\/grade_item_edit.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-grade-item-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'enterZeroForMissingGradebook',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/grades/admin/enter/user_list_view.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/grades\/admin\/enter\/user_list_view.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-gradebook-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'bulkDateManageForAssignments',
-        "^https?://ptcsc.desire2learn.com/d2l/lms/manageDates/date_manager.d2l*",
+        /^https?:\/\/ptcsc.desire2learn.com\/d2l\/lms\/manageDates\/date_manager.d2l*/,
         ['./modules/jquery-3.6.0.min.js', './modules/moment.min.js',
             './foreground-tasks/bulk-date-manager-fg.js'],
         "./register-gen/rg-popup.html"
@@ -159,6 +159,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 return;
             }
         }
+        ``
         sendResponse({location: "no%20op.html"})
     } else if (request.action === 'fetch_grades' && request.from === 'foreground') {
         getGrades(request.d2lid, request.isFinal, sendResponse)
