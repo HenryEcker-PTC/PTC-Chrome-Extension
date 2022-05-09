@@ -1,0 +1,40 @@
+html, body {
+    max-height: 100%;
+    max-width: 100%;
+    padding: 20px;
+    margin: 0;
+}
+
+.scaling-grid-rows {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 600px));
+    grid-gap: 10px;
+}
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+#tool-enable-disable-form {
+    display: grid;
+    grid-template-columns: 300px 25px;
+    grid-row-gap: 5px;
+}
+
+h1.centered {
+    text-align: center;
+}
+
+.editor-container {
+    margin: auto;
+}
+
+.editor-container, #common-feedback-editor {
+    width: 550px;
+}
+
+#common-feedback-editor {
+    height: 375px;
+}

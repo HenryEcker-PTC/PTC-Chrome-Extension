@@ -1,3 +1,4 @@
+/* globals chrome */
 const buildWindow = () => {
     const builder = new WindowBuilder();
     builder.createDialogBox();

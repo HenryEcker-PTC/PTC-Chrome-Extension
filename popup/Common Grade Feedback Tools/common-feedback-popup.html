@@ -6,59 +6,13 @@
     <link rel="stylesheet" href="../popup.css">
     <link rel="stylesheet" href="../../styles.css">
     <style>
-        body {
-            width: 600px;
-            height: 300px;
-        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="title">Feedback Options</h1>
-    <hr/>
-    <h2 class="subtitle">Resources</h2>
-    <div>
-        <a target="_blank" href="http://hilite.me/">Code Highlighting</a>
+    <div id="mount-point">
+        <span>Nothing here... Configure your common feedbacks in the options panel</span>
     </div>
-    <hr/>
-
-    <h2 class="subtitle">No Submission</h2>
-    <div id="NoSubmissionTemplate">No Submission.</div>
-    <p>
-        <button id="no_sub_btn">Populate Clipboard with Standard No Submission Feedback
-        </button>
-    </p>
-    <hr/>
-    <h2 class="subtitle">No Submission 2</h2>
-    <div id="NoSubmissionTemplate2">No Submission. Make sure to hit submit on assignments when you complete them.</div>
-    <p>
-        <button id="no_sub_btn2">Populate Clipboard with Standard No Submission Feedback
-        </button>
-    </p>
-    <hr/>
-    <h2 class="subtitle">Wrong File Name Feedback Template</h2>
-    <div id="WrongFileNameTemplate">
-        <p>The error message you received:</p>
-        <div style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; font-family: 'proxima-nova', 'Proxima Nova', 'Helvetica Neue', Helvetica, sans-serif;">
-            <div style="margin: 10px 0; border: 1px solid #e1e5eb; border-top-left-radius: 2px; border-top-right-radius: 2px;">
-                <div style="padding: 12px; background-color: #f9f9fb; font-size: 14pt; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-                    <span style="color: #bf2121;">File Name (0.0/1.0)</span></div>
-                <div style="padding: 8px 12px; overflow: auto; border-top: 1px solid #e1e5eb;">
-                    <pre>File "main.cpp" not found! Please make sure your file is named correctly.</pre>
-                </div>
-            </div>
-        </div>
-        <p>Means that your file was supposed to be named "main.cpp" and it was not. Incorrectly named files become lost
-            or
-            de-referenced in large systems. The file name is just as important as its contents. Additionally, the error
-            is
-            easy to fix. When you see this error message, simply rename your file to the correct value and resubmit.</p>
-    </div>
-    <p>
-        <button id="pop_clip_std_wrong_fn_btn">Populate Clipboard with Standard Wrong File Name
-            Feedback
-        </button>
-    </p>
 </div>
 
 <script src=" ./common-feedback-popup.js"></script>

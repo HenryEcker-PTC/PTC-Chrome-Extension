@@ -1,3 +1,5 @@
+/* globals Quill, chrome */
+
 const a = document.getElementById("A");
 const b = document.getElementById("B");
 const c = document.getElementById("C");
@@ -13,14 +15,30 @@ const gradeFeedbackD2LPattern = document.getElementById("gradeFeedbackD2LPattern
 const enterZeroForMissingGrades = document.getElementById("enterZeroForMissingGrades");
 const enterZeroForMissingGradebook = document.getElementById("enterZeroForMissingGradebook");
 const bulkDateManageForAssignments = document.getElementById("bulkDateManageForAssignments");
-
+const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
+/* Text Editor */
+/* Imported by script in options.html */
+const quill = new Quill('#common-feedback-editor', {
+    modules: {
+        toolbar: [
+            [{header: [1, 2, 3, 4, false]}],
+            ['bold', 'italic', 'underline'],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            ['link'],
+            ['blockquote', 'code-block'],
+            [{'color': []}, {'background': []}],
+            [{'align': []}],
+        ]
+    },
+    theme: 'snow'  // or 'bubble'
+});
 chrome.storage.sync.get([
     'A', 'B', 'C', 'D', 'S', 'M',
     'isAdjusted',
     'bannerPattern', 'enterFinalGradeD2LPattern', 'editAttendanceD2LPattern',
     'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
-    'bulkDateManageForAssignments'
+    'bulkDateManageForAssignments', 'commonFeedbackHTML'
 ], response => {
     a.value = response.A;
     b.value = response.B;
@@ -37,6 +55,7 @@ chrome.storage.sync.get([
     enterZeroForMissingGrades.checked = response.enterZeroForMissingGrades;
     enterZeroForMissingGradebook.checked = response.enterZeroForMissingGradebook;
     bulkDateManageForAssignments.checked = response.bulkDateManageForAssignments;
+    quill.root.innerHTML = response.commonFeedbackHTML || '';
 });
 
 const validateForm = () => {
@@ -86,3 +105,9 @@ document.getElementById("updateEnabledTools").addEventListener("click", () => {
     }
     return true;
 });
+
+commonFeedbackSave.addEventListener('click', (ev) => {
+    chrome.storage.sync.set({
+        commonFeedbackHTML: quill.root.innerHTML
+    });
+})
