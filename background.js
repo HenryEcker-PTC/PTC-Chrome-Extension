@@ -1,6 +1,8 @@
+/* globals chrome */
 importScripts("./background-tasks/fetch-grades-bg.js");
 importScripts("./background-tasks/fetch-dates-for-register-bg.js");
 importScripts('./modules/moment.min.js');
+importScripts('./background-tasks/fetch-common-grade-feedback-html-bg.js')
 
 chrome.runtime.onInstalled.addListener(() => {
     // Set Defaults;
@@ -20,6 +22,7 @@ chrome.runtime.onInstalled.addListener(() => {
         enterZeroForMissingGrades: true,
         enterZeroForMissingGradebook: true,
         bulkDateManageForAssignments: true,
+        commonFeedbackHTML: ''
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
@@ -135,17 +138,31 @@ const patterns = [
 ];
 
 
+const testPattern = async (url) => {
+    for (let pattern of patterns) {
+        if (pattern.test(url)) {
+            return await new Promise(resolve => {
+                chrome.storage.sync.get(pattern.name, response => {
+                    if (response[pattern.name]) {
+                        resolve(pattern);
+                    } else {
+                        resolve(undefined);
+                    }
+                });
+            });
+        }
+    }
+    return undefined;
+}
+
 // listener to Inject foreground script;
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
     if (changeInfo.status === 'complete') {
-        chrome.storage.sync.get(patterns.map(e => e.name), response => {
-            for (let pattern of patterns) {
-                if (response[pattern.name] && pattern.test(tabInfo.url)) {
-                    pattern.injectScripts(tabId);
-                    break;
-                }
+        testPattern(tabInfo.url).then(pattern => {
+            if (pattern) {
+                pattern.injectScripts(tabId);
             }
-        });
+        })
     }
     return true;
 });
@@ -153,14 +170,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'get_popup_location' && request.from === 'popup') {
-        for (let pattern of patterns) {
-            if (pattern.test(request.tabInfo.url)) {
+        testPattern(request.tabInfo.url).then(pattern => {
+            if (pattern) {
                 sendResponse({location: pattern.UIPath});
-                return;
+            } else {
+                sendResponse({location: "no%20op.html"});
             }
-        }
-        ``
-        sendResponse({location: "no%20op.html"})
+        });
+
     } else if (request.action === 'fetch_grades' && request.from === 'foreground') {
         getGrades(request.d2lid, request.isFinal, sendResponse)
     } else if (request.action === 'fetch_patterns' && request.from === 'popup') {
@@ -169,6 +186,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         fetchDays(request.start, request.date, request.weekdays, undefined, sendResponse);
     } else if (request.action === 'fetch_pinned_courses' && request.from === 'foreground') {
         getPinnedCourses(sendResponse);
+    } else if (request.action === 'fetch_common_feedback_html' && request.from === 'popup') {
+        console.log('requested');
+        getCommonFeedbackHTML(sendResponse);
     }
     return true;
 });

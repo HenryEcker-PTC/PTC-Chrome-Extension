@@ -1,3 +1,4 @@
+/* globals chrome, moment */
 const fetchDays = (start_, end_, weekdays, index, sendResponse) => {
     let start = moment(start_);
     let end = moment(end_);

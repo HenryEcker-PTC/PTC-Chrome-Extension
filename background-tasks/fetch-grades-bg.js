@@ -1,3 +1,4 @@
+/* globals chrome */
 const letterGradeConverter = async (p) => {
     return new Promise((resolve) => {
         chrome.storage.sync.get(['A', 'B', 'C', 'D'], response => {
