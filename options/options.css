@@ -1,8 +1,25 @@
+:root {
+    --footer-height: 40px;
+}
+
 html, body {
     max-height: 100%;
     max-width: 100%;
-    padding: 20px;
+    padding: 10px 20px 0;
     margin: 0;
+}
+
+main {
+    min-height: 100%;
+    padding-bottom: var(--footer-height);
+}
+
+footer {
+    height: var(--footer-height);
+    margin-top: calc(-1 * var(--footer-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .scaling-grid-rows {
