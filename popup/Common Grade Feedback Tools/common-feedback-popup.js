@@ -1,6 +1,14 @@
-/* globals chrome */
+/* globals chrome, ClipboardJS */
+
+const setCopyLinks = () => {
+    const clipboard = new ClipboardJS('.easy-copyable-button', {});
+    clipboard.on('success', (e) => {
+        e.clearSelection();
+    });
+};
+
 const mountPoint = document.getElementById('mount-point');
-console.log(document);
+
 chrome.runtime.sendMessage({
         action: 'fetch_common_feedback_html',
         from: 'popup',
@@ -12,6 +20,7 @@ chrome.runtime.sendMessage({
         }
         if (res.success && res.innerHTML.length > 0) {
             mountPoint.innerHTML = res.innerHTML;
+            setCopyLinks()
         }
     }
 );

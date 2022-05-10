@@ -187,7 +187,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'fetch_pinned_courses' && request.from === 'foreground') {
         getPinnedCourses(sendResponse);
     } else if (request.action === 'fetch_common_feedback_html' && request.from === 'popup') {
-        console.log('requested');
         getCommonFeedbackHTML(sendResponse);
     }
     return true;
