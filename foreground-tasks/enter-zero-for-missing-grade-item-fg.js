@@ -1,7 +1,6 @@
 const setZero = (ev) => {
     ev.preventDefault();
     $('th:contains(Grade)').parent().parent()// tbody element above Grade Header
-        .find('tr:gt(0)')// Skip Header Row
         .find('d2l-input-number')//  input text field
         .each((i, e) => {
             if (!e.getAttribute('value')) {
