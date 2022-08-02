@@ -49,10 +49,7 @@ const fetchGrades = (ev) => {
         });
         const success = !(res && Object.keys(res).length === 0);
         const d2lIDinput = document.getElementById(myInputFieldId);
-        if (success) {
-            d2lIDinput.value = '';
-            d2lIDinput.placeholder = '';
-        } else {
+        if (!success) {
             d2lIDinput.value = '';
             d2lIDinput.placeholder = 'No Grades found at that ID';
         }
