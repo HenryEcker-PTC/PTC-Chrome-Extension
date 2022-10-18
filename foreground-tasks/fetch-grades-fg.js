@@ -29,7 +29,7 @@ const fetchGrades = (ev) => {
     }, (res) => {
         console.log(res); // Should log
         const gradeFieldSelector = finalGrade ? 'td[data-name="grade"]' : 'td[data-name="gradeMidTerm"]';
-        const trs = $('table[aria-labelledby="finalGradeCourseRosterDetail-caption"] tr.ng-scope');
+        const trs = $(`table[aria-labelledby="${finalGrade ? 'finalGradeCourseRosterDetail-caption' : 'midtermGradeCourseRosterDetail-caption'}"] tr.ng-scope`);
         trs.each((idx, elem) => {
             const jQElem = $(elem);
             const gradeInputSelect = jQElem.find(`${gradeFieldSelector} select`);
