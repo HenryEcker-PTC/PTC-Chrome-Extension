@@ -88,7 +88,7 @@ const patterns = [
         'bannerPattern',
         /^https?:\/\/banner\.ptc\.edu\/FacultySelfService\/ssb\/GradeEntry#\/*/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/fetch-grades-fg.js',
-            './popup/PTC Tools/banner-grade-importer-styles.css'],
+            './popup/Banner Grade Importer/banner-grade-importer-styles.css'],
         "./injected-only.html"
     ),
     new PagePattern(
