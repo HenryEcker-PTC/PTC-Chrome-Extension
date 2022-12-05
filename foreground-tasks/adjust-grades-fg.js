@@ -3,7 +3,7 @@ const adjustGrades = (ev) => {
     const trs = $('table').eq(9).find('tr').filter((i, e) => (e.childElementCount === 8));
     if (trs) {
         chrome.storage.sync.get(['isAdjusted'], response => {
-            let percents = trs.map((i, e) => parseFloat($(e).find("label").eq(2).text()));
+            let percents = trs.map((i, e) => parseFloat($(e).find("label:contains(%)").eq(0).text()));
             if (response.isAdjusted) {
                 const curve = 100 - Math.max(...percents);
                 percents = percents.map((i, e) => Math.round(e + curve));
