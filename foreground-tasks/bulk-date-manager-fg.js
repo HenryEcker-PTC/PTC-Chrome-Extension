@@ -1,3 +1,7 @@
+const getTrs = () => {
+    return $('#z_ck_c tbody:eq(1)').find('tr[role=row]');
+};
+
 /* globals chrome, moment */
 const convertToMoment = (m) => {
     return moment(new Date(m)).utcOffset(0, true);
@@ -36,7 +40,7 @@ const addSelects = (dates, dateType) => function () {
 };
 
 const buildSelects = (startDates, endDates) => {
-    const trs = $('#z_cl_c tbody').find('tr[role=row]');
+    const trs = getTrs();
 
     const due_col = trs.find('td:eq(3)');
     const start_col = trs.find('td:eq(4)');
@@ -94,7 +98,7 @@ const changeDate = (iframe, checkboxId, dateSelectorId, new_date) => {
 const applyDates = async (ev) => {
     ev.preventDefault();
 
-    const trs = $('#z_cl_c tbody').find('tr[role=row]');
+    const trs = getTrs();
     let actionItems = {};
     for (let j = 0; j < trs.length; j++) {
         $(trs[j]).find('.my-select-dates-updater').each((i, e) => {
