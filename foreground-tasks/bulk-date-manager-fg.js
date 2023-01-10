@@ -98,35 +98,38 @@ const changeDate = (iframe, checkboxId, dateSelectorId, new_date) => {
 const applyDates = async (ev) => {
     ev.preventDefault();
 
-    const trs = getTrs();
-    let actionItems = {};
-    for (let j = 0; j < trs.length; j++) {
-        $(trs[j]).find('.my-select-dates-updater').each((i, e) => {
-            let new_date = $(e).val();
-            if (new_date) {
-                new_date = new_date.slice(0, -1);
-                const type = $(e).attr('dateType');
-                let inclusion = {};
-                if (type === '3') {
-                    inclusion['dueDate'] = new_date;
-                    inclusion['dueElem'] = e;
-                } else if (type === '4') {
-                    inclusion['startDate'] = new_date;
-                    inclusion['accessElem'] = e;
-                } else if (type === '5') {
-                    inclusion['endDate'] = new_date;
-                    inclusion['accessElem'] = e;
-                }
+    const actionItems = getTrs().map((i, e) => {
+        const tr = $(e);
+        return {
+            type: tr.find('td[headers*="Type"]').text(),
+            ...tr.find('.my-select-dates-updater').toArray().reduce((acc, e) => {
+                let new_date = $(e).val();
+                if (new_date) {
+                    new_date = new_date.slice(0, -1);
+                    const type = $(e).attr('dateType');
+                    let inclusion = {};
+                    if (type === '3') {
+                        inclusion['dueDate'] = new_date;
+                        inclusion['dueElem'] = e;
+                    } else if (type === '4') {
+                        inclusion['startDate'] = new_date;
+                        inclusion['accessElem'] = e;
+                    } else if (type === '5') {
+                        inclusion['endDate'] = new_date;
+                        inclusion['accessElem'] = e;
+                    }
 
-                actionItems[j] = {
-                    ...actionItems[j],
-                    ...inclusion
+                    acc = {
+                        ...acc,
+                        ...inclusion
+                    }
                 }
-            }
-        });
-    }
+                return acc;
+            }, {})
+        };
+    });
 
-    for (let [row, values] of Object.entries(actionItems)) {
+    for (let values of actionItems) {
         if (values.dueDate) {
             const b = $(values.dueElem).parent().find('div.yui-dt-liner a');
             if (b[0]) {
@@ -143,7 +146,11 @@ const applyDates = async (ev) => {
                 b[0].dispatchEvent(new Event("click"));
                 const iframe = await waitForAttach();
                 if (values.endDate) {
-                    changeDate(iframe, '#z_q', '#z_r', values.endDate);
+                    if (values.type === "Discussion Topic") {
+                        changeDate(iframe, '#z_u', '#z_v', values.endDate);
+                    } else {
+                        changeDate(iframe, '#z_q', '#z_r', values.endDate);
+                    }
                 }
                 if (values.startDate) {
                     changeDate(iframe, '#z_n', '#z_o', values.startDate);
