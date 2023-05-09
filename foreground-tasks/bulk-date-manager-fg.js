@@ -149,11 +149,11 @@ const applyDates = async (ev) => {
                     if (values.type === "Discussion Topic") {
                         changeDate(iframe, '#z_u', '#z_v', values.endDate);
                     } else {
-                        changeDate(iframe, '#z_q', '#z_r', values.endDate);
+                        changeDate(iframe, '#z_r', '#z_s', values.endDate);
                     }
                 }
                 if (values.startDate) {
-                    changeDate(iframe, '#z_n', '#z_o', values.startDate);
+                    changeDate(iframe, '#z_o', '#z_p', values.startDate);
                 }
             }
 
