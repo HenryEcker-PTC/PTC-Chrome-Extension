@@ -206,7 +206,7 @@ const applyDates = async (ev) => {
             if (b[0]) {
                 b[0].dispatchEvent(new Event("click"));
                 const iframe = await waitForAttach();
-                changeDate(iframe, '#z_j', '#z_k', values.dueDate);
+                changeDate(iframe, '#z_k', '#z_n', values.dueDate);
             }
 
             await delayedSave();
