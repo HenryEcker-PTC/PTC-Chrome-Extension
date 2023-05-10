@@ -8,14 +8,13 @@ const convertToMoment = (m) => {
 };
 
 const convertToDateTime = (d) => {
-    return {value: d.toISOString(), display: d.format('MM/DD/YYYY hh:mm a')};
+    return {raw: d, value: d.toISOString(), display: d.format('MM/DD/YYYY hh:mm a')};
 };
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'write_meetings_arg' && request.from === 'popup') {
         sendResponse({needed_to_add: 0});
-        console.log(request);
         const startDates = [
             convertToMoment(request.startDate),
             ...request.dates.map(m => convertToMoment(m).add(1, 'days'))
@@ -30,34 +29,106 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 
-const addSelects = (dates, dateType) => function () {
+const buildSelect = (dates, dateType) => {
     const select = $(`<select class="my-select-dates-updater" dateType="${dateType}"></select>`);
     select.append($(`<option value=""></option>`));
     dates.forEach((datetime) => {
         select.append($(`<option value="${datetime.value}">${datetime.display}</option>`))
     });
-    $(this).append(select);
+    return select;
 };
+
+const findFirstDateAfter = (dates, search) => {
+    for (const d of dates) {
+        if (d.raw >= search) {
+            return d.value;
+        }
+    }
+    // Default to last value
+    return dates[dates.length - 1].value;
+}
+
+
+class EntryController {
+    constructor(startDates, endDates) {
+        this.startDateSelect = buildSelect(startDates, 4);
+
+        this.dueDateSelect = buildSelect(endDates, 3);
+
+        this.endDateSelect = buildSelect(endDates, 5);
+        this.endDateBoundCheckbox = $('<input type="checkbox"/>');
+
+        this.windowLengthInput = $('<input type="number" min="0" step="1"/>');
+        this.windowLengthInput.val(7);
+
+        this.windowLengthInput.on('change', () => {
+            this._updateEndDate(endDates);
+        })
+
+        this.endDateBoundCheckbox.on('change', (ev) => {
+            this.endDateSelect.prop('disabled', ev.target.checked);
+            this._updateEndDate(endDates);
+        });
+
+        this.startDateSelect.on('change', () => {
+            this._updateEndDate(endDates);
+        });
+    }
+
+    _getWindowLength() {
+        const v = this.windowLengthInput.val();
+        if (v.length === 0) {
+            return undefined;
+        }
+        return Number(v);
+    }
+
+    _updateEndDate(endDates) {
+        if (this.endDateBoundCheckbox.prop('checked')) {
+            const startDateValue = this.startDateSelect.val();
+            const offset = this._getWindowLength();
+            if (startDateValue.length > 0 && offset !== undefined) {
+                const m = moment(new Date(startDateValue));
+                const dValue = findFirstDateAfter(endDates, m.add(offset - 1, 'days'));
+                this.endDateSelect.val(dValue);
+            } else {
+                this.endDateSelect.val('');
+            }
+        }
+    }
+
+
+    attachComponentToRow(tr) {
+        tr.find('td:eq(3)').append(this.dueDateSelect);
+        tr.find('td:eq(4)').append(this.startDateSelect);
+        tr.find('td:eq(5)').append(
+            $('<div style="display:flex;gap:10px;"></div>')
+                .append(this.endDateBoundCheckbox)
+                .append(this.endDateSelect)
+        );
+        tr.find('td:eq(6)').append(this.windowLengthInput);
+    }
+}
 
 const buildSelects = (startDates, endDates) => {
-    const trs = getTrs();
-
-    const due_col = trs.find('td:eq(3)');
-    const start_col = trs.find('td:eq(4)');
-    const end_col = trs.find('td:eq(5)');
-    start_col.each(addSelects(startDates, 4));
-    end_col.each(addSelects(endDates, 5));
-    due_col.each(addSelects(endDates, 3));
-    addApplyButton();
+    getTrs()
+        .each((i, e) => {
+            const ec = new EntryController(startDates, endDates);
+            ec.attachComponentToRow($(e));
+        });
+    $('d2l-button-subtle')
+        .last()
+        .closest('ul')
+        .append(buildApplyButtonComponent());
 };
 
 
-const addApplyButton = () => {
+const buildApplyButtonComponent = () => {
     const li = $('<li class="float_l" style="display: inline;"></li>');
     const button = $(`<d2l-button-subtle dir="ltr" type="button" text="Apply Dates" data-js-focus-visible=""></d2l-button-subtle>`);
     button.on('click', applyDates);
     li.append(button);
-    $('d2l-button-subtle').last().closest('ul').append(li);
+    return li;
 };
 
 const waitForAttach = () => {
@@ -131,7 +202,7 @@ const applyDates = async (ev) => {
 
     for (let values of actionItems) {
         if (values.dueDate) {
-            const b = $(values.dueElem).parent().find('div.yui-dt-liner a');
+            const b = $(values.dueElem).closest('td').find('div.yui-dt-liner a');
             if (b[0]) {
                 b[0].dispatchEvent(new Event("click"));
                 const iframe = await waitForAttach();
@@ -141,7 +212,7 @@ const applyDates = async (ev) => {
             await delayedSave();
         }
         if (values.endDate || values.startDate) {
-            const b = $(values.accessElem).parent().find('div.yui-dt-liner a');
+            const b = $(values.accessElem).closest('td').find('div.yui-dt-liner a');
             if (b[0]) {
                 b[0].dispatchEvent(new Event("click"));
                 const iframe = await waitForAttach();
