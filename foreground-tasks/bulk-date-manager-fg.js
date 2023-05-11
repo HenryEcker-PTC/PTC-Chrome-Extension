@@ -218,7 +218,7 @@ const applyDates = async (ev) => {
                 const iframe = await waitForAttach();
                 if (values.endDate) {
                     if (values.type === "Discussion Topic") {
-                        changeDate(iframe, '#z_u', '#z_v', values.endDate);
+                        changeDate(iframe, '#z_v', '#z_w', values.endDate);
                     } else {
                         changeDate(iframe, '#z_r', '#z_s', values.endDate);
                     }
