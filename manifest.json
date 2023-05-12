@@ -2,7 +2,7 @@
   "name": "PTC Tools",
   "description": "Collection of Tools For PTC",
   "author": "Henry Ecker (https://github.com/HenryEcker)",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "manifest_version": 3,
   "key": "aelhbikadpfbloieenjjonodemmaekfd",
   "background": {
@@ -19,7 +19,9 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://banner.ptc.edu/FacultySelfService/*",
-    "https://ptcsc.desire2learn.com/d2l/api/*"
+    "*://banner.ptc.edu/FacultySelfService/*",
+    "*://ptcsc.desire2learn.com/d2l/api/*",
+    "*://degreeworks.ptc.edu/Dashboard/api/*",
+    "*://dynamicforms.ngwebsolutions.com/Submit/*"
   ]
 }

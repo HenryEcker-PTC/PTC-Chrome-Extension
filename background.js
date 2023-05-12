@@ -2,7 +2,8 @@
 importScripts("./background-tasks/fetch-grades-bg.js");
 importScripts("./background-tasks/fetch-dates-for-register-bg.js");
 importScripts('./modules/moment.min.js');
-importScripts('./background-tasks/fetch-common-grade-feedback-html-bg.js')
+importScripts('./background-tasks/fetch-common-grade-feedback-html-bg.js');
+importScripts('./background-tasks/sap-financial-aid-appeal-info-fetcher-bg.js');
 
 chrome.runtime.onInstalled.addListener(() => {
     // Set Defaults;
@@ -22,7 +23,8 @@ chrome.runtime.onInstalled.addListener(() => {
         enterZeroForMissingGrades: true,
         enterZeroForMissingGradebook: true,
         bulkDateManageForAssignments: true,
-        commonFeedbackHTML: ''
+        commonFeedbackHTML: '',
+        sapAppealFetcher: false
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
@@ -86,54 +88,60 @@ const injectScripts = (tabId, files) => {
 const patterns = [
     new PagePattern(
         'bannerPattern',
-        /^https?:\/\/banner\.ptc\.edu\/FacultySelfService\/ssb\/GradeEntry#\/*/,
+        /^https?:\/\/banner\.ptc\.edu\/FacultySelfService\/ssb\/GradeEntry#\//,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/fetch-grades-fg.js',
             './popup/Banner Grade Importer/banner-grade-importer-styles.css'],
         "./injected-only.html"
     ),
     new PagePattern(
         'enterFinalGradeD2LPattern',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/grade_final_edit.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/grade_final_edit.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/adjust-grades-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'editAttendanceD2LPattern',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/attendance\/attendance\/data_edit\.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/attendance\/attendance\/data_edit\.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/attendance_from_participation_fg.js',
             './popup/afp/afp.css'],
         "./injected-only.html"
     ),
     new PagePattern(
         'attendanceRegisterCreateD2LPattern',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/attendance\/registers\/registers_newedit.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/attendance\/registers\/registers_newedit.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/attendance-register-generator-fg.js'],
         "./register-gen/rg-popup.html"
     ),
     new PagePattern(
         'gradeFeedbackD2LPattern',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/le\/activities\/iterator\/*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/le\/activities\/iterator\//,
         null,
         "./Common Grade Feedback Tools/common-feedback-popup.html"
     ),
     new PagePattern(
         'enterZeroForMissingGrades',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/(grade_item_edit|grade_category_edit)\.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/(grade_item_edit|grade_category_edit)\.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-grade-item-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'enterZeroForMissingGradebook',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/user_list_view\.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/grades\/admin\/enter\/user_list_view\.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/enter-zero-for-missing-gradebook-fg.js'],
         "./injected-only.html"
     ),
     new PagePattern(
         'bulkDateManageForAssignments',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/manageDates\/date_manager\.d2l*/,
+        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/manageDates\/date_manager\.d2l/,
         ['./modules/jquery-3.6.0.min.js', './modules/moment.min.js',
             './foreground-tasks/bulk-date-manager-fg.js'],
         "./register-gen/rg-popup.html"
+    ),
+    new PagePattern(
+        'sapAppealFetcher',
+        /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=98792.*?&page=123525/,
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/sap-financial-aid-appeal-info-fetcher-fg.js'],
+        "./SAP Financial Aid Appeal/sap-pnumber-entry.html"
     ),
 ];
 
@@ -188,6 +196,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getPinnedCourses(sendResponse);
     } else if (request.action === 'fetch_common_feedback_html' && request.from === 'popup') {
         getCommonFeedbackHTML(sendResponse);
+    } else if (request.action === 'request_sap_details' && request.from === 'popup') {
+        getStudentSAPFields(request.pNumber, sendResponse);
     }
     return true;
 });

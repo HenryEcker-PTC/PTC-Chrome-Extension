@@ -16,6 +16,7 @@ const enterZeroForMissingGrades = document.getElementById("enterZeroForMissingGr
 const enterZeroForMissingGradebook = document.getElementById("enterZeroForMissingGradebook");
 const bulkDateManageForAssignments = document.getElementById("bulkDateManageForAssignments");
 const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
+const sapAppealFetcher = document.getElementById('sapAppealFetcher');
 
 /* Text Editor */
 /* Custom Icon */
@@ -278,6 +279,7 @@ chrome.storage.sync.get([
     enterZeroForMissingGradebook.checked = response.enterZeroForMissingGradebook;
     bulkDateManageForAssignments.checked = response.bulkDateManageForAssignments;
     quill.root.innerHTML = response.commonFeedbackHTML || '';
+    sapAppealFetcher.checked = response.sapAppealFetcher;
 });
 
 const validateForm = () => {
@@ -323,6 +325,7 @@ document.getElementById("updateEnabledTools").addEventListener("click", () => {
             enterZeroForMissingGrades: enterZeroForMissingGrades.checked,
             enterZeroForMissingGradebook: enterZeroForMissingGradebook.checked,
             bulkDateManageForAssignments: bulkDateManageForAssignments.checked,
+            sapAppealFetcher: sapAppealFetcher.checked
         })
     }
     return true;
