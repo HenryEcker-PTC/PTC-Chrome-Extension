@@ -261,7 +261,7 @@ chrome.storage.sync.get([
     'bannerPattern', 'enterFinalGradeD2LPattern', 'editAttendanceD2LPattern',
     'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
-    'bulkDateManageForAssignments', 'commonFeedbackHTML'
+    'bulkDateManageForAssignments', 'commonFeedbackHTML', 'sapAppealFetcher'
 ], response => {
     a.value = response.A;
     b.value = response.B;
