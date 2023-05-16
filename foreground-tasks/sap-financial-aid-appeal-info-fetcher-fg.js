@@ -33,7 +33,7 @@ const chooseSelectSecondOption = (pageItemId) => {
     return new Promise((resolve) => {
         const select = getSelectItem(pageItemId);
         select.val(select.find('option:eq(1)').val());
-        select.dispatchEvent(new Event('change'));
+        select[0].dispatchEvent(new Event('change'));
         setTimeout(resolve, 25);
     });
 }
