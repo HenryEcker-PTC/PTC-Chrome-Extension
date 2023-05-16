@@ -1,25 +1,94 @@
 /* globals chrome, $ */
-const doInputValue = (pageItemId, value, triggerEvent) => {
-    const field = $(`input[data-pageitemid="${pageItemId}"]`);
-    field.val(value);
-    field[0].dispatchEvent(new Event(triggerEvent));
+
+const inputIdMap = {
+    pNumberInput: 10633546,
+    nameInput: 10633548,
+    gpaInput: 10633662,
+    completionRateInput: 10633663,
+    timeframeInput: 10633665
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("fg", request);
-    if (request.action === 'write_sap_details' && request.from === 'popup') {
-        const data = request.sapInfo;
-        // P-Number
-        doInputValue(10633546, data.pNumber, 'keyup');
-        // Full Name
-        doInputValue(10633548, data.name, 'change');
-        // SAP GPA
-        doInputValue(10633662, data.gpa, 'change');
-        // Program Completion Rate
-        doInputValue(10633663, data.completionRate, 'change');
-        // Timeframe
-        doInputValue(10633665, data.timeframe, 'change');
+const selectIdMap = {
+    semesterSelect: 10633657
+}
+
+const getInputItem = (pageItemId) => {
+    return $(`input[data-pageitemid="${pageItemId}"]`);
+};
+
+const getSelectItem = (pageItemId) => {
+    return $(`select[data-pageitemid="${pageItemId}"]`);
+}
+
+const doInputValue = (pageItemId, value, triggerEvent) => {
+    return new Promise((resolve) => {
+        const field = getInputItem(pageItemId);
+        field.val(value);
+        field[0].dispatchEvent(new Event(triggerEvent));
+        setTimeout(resolve, 25); // Allow time for validation to update
+    });
+};
+
+const chooseSelectSecondOption = (pageItemId) => {
+    return new Promise((resolve) => {
+        const select = getSelectItem(pageItemId);
+        select.val(select.find('option:eq(1)').val());
+        select.dispatchEvent(new Event('change'));
+        setTimeout(resolve, 25);
+    });
+}
+
+const setDisabledPropForAllFields = (isDisabled) => {
+    Object.values(inputIdMap).forEach(inputId => {
+        getInputItem(inputId).prop('disabled', isDisabled);
+    });
+    Object.values(selectIdMap).forEach(inputId => {
+        getSelectItem(inputId).prop('disabled', isDisabled);
+    });
+}
+
+const sendRequestForSapDetails = (value) => {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({
+                action: 'request_sap_details',
+                from: 'foreground',
+                pNumber: value
+            },
+            async (res) => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error');
+                }
+                if (res.success === true) {
+                    // Full Name
+                    void await doInputValue(inputIdMap.nameInput, res.name, 'change');
+                    // Active Semester
+                    void await chooseSelectSecondOption(selectIdMap.semesterSelect);
+                    // SAP GPA
+                    void await doInputValue(inputIdMap.gpaInput, res.gpa, 'change');
+                    // Program Completion Rate
+                    void await doInputValue(inputIdMap.completionRateInput, res.completionRate, 'change');
+                    // Timeframe
+                    void await doInputValue(inputIdMap.timeframeInput, res.timeframe, 'change');
+                    resolve();
+                } else {
+                    reject();
+                }
+            }
+        );
+    });
+}
+
+const pNumberChangeHandler = (ev) => {
+    ev.preventDefault();
+    setDisabledPropForAllFields(true);
+    const value = ev.target.value.toUpperCase().trim();
+    if (value.length === 0) {
+        return undefined;
     }
-    sendResponse({success: true});
-    return true;
-});
+    sendRequestForSapDetails(value)
+        .finally(() => {
+            setDisabledPropForAllFields(false);
+        });
+};
+
+getInputItem(inputIdMap.pNumberInput).on('change', pNumberChangeHandler);

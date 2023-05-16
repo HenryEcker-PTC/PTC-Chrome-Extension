@@ -141,7 +141,7 @@ const patterns = [
         'sapAppealFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=98792.*?&page=123525/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/sap-financial-aid-appeal-info-fetcher-fg.js'],
-        "./SAP Financial Aid Appeal/sap-pnumber-entry.html"
+        "./injected-only.html"
     ),
 ];
 
@@ -196,7 +196,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getPinnedCourses(sendResponse);
     } else if (request.action === 'fetch_common_feedback_html' && request.from === 'popup') {
         getCommonFeedbackHTML(sendResponse);
-    } else if (request.action === 'request_sap_details' && request.from === 'popup') {
+    } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         getStudentSAPFields(request.pNumber, sendResponse);
     }
     return true;
