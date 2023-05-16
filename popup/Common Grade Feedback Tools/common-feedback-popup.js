@@ -1,5 +1,3 @@
-/* globals chrome, ClipboardJS */
-
 const setCopyLinks = () => {
     const clipboard = new ClipboardJS('.easy-copyable-button', {});
     clipboard.on('success', (e) => {
@@ -11,7 +9,7 @@ const mountPoint = document.getElementById('mount-point');
 
 chrome.runtime.sendMessage({
         action: 'fetch_common_feedback_html',
-        from: 'popup',
+        from: 'popup'
     },
     (res) => {
         if (chrome.runtime.lastError) {
@@ -20,7 +18,7 @@ chrome.runtime.sendMessage({
         }
         if (res.success && res.innerHTML.length > 0) {
             mountPoint.innerHTML = res.innerHTML;
-            setCopyLinks()
+            setCopyLinks();
         }
     }
 );

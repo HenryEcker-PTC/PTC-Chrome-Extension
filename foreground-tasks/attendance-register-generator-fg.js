@@ -6,22 +6,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 const fillTableRows = (values) => {
-    let l = values.length;
+    const l = values.length;
     let i = 0;
-    $("table:eq(2) tr").each(function () {
+    $('table:eq(2) tr').each(function () {
         if (i >= l) {
             // Delete Unnecessary Rows
-            const e = $(this).find("a[title*='Delete']");
+            const e = $(this).find('a[title*=\'Delete\']');
             if (e[0]) {
-                e[0].dispatchEvent(new Event("click"));
+                e[0].dispatchEvent(new Event('click'));
             }
         } else {
             // Fill
-            const e = $(this).find("a[title*='Restore']");
+            const e = $(this).find('a[title*=\'Restore\']');
             if (e[0]) {
-                e[0].dispatchEvent(new Event("click"));
+                e[0].dispatchEvent(new Event('click'));
             }
-            $(this).find("input:text:eq(0)").each(function () {
+            $(this).find('input:text:eq(0)').each(function () {
                 $(this)[0].value = values[i];
                 i++;
             });
@@ -31,17 +31,17 @@ const fillTableRows = (values) => {
 
 
 const writeMeetings = (results, sendResponse) => {
-    const num_rows = $("table:eq(2) tr").length - 1;
+    const num_rows = $('table:eq(2) tr').length - 1;
     const num_needed = results.length;
-    const button = $("a:contains(Add Sessions)");
+    const button = $('a:contains(Add Sessions)');
     if (num_needed > num_rows) {
         let to_add = num_needed - num_rows;
         if (to_add > 100) {
             to_add = 100; // D2L Only allows 100 sessions to be added at a time.
         }
         sendResponse({needed_to_add: to_add});
-        button.next("d2l-input-number")[0].setAttribute('value', to_add);
-        button[0].dispatchEvent(new Event("click"));
+        button.next('d2l-input-number')[0].setAttribute('value', to_add);
+        button[0].dispatchEvent(new Event('click'));
         return;
     }
     fillTableRows(results);

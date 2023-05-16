@@ -2,7 +2,6 @@ const getTrs = () => {
     return $('#z_ck_c tbody:eq(1)').find('tr[role=row]');
 };
 
-/* globals chrome, moment */
 const convertToMoment = (m) => {
     return moment(new Date(m)).utcOffset(0, true);
 };
@@ -17,10 +16,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({needed_to_add: 0});
         const startDates = [
             convertToMoment(request.startDate),
-            ...request.dates.map(m => convertToMoment(m).add(1, 'days'))
+            ...request.dates.map((m) => {
+                return convertToMoment(m).add(1, 'days');
+            })
         ];
         const endDates = [
-            ...request.dates.map(m => convertToMoment(m).add(23, 'hours').add(59, 'minutes')),
+            ...request.dates.map((m) => {
+                return convertToMoment(m).add(23, 'hours').add(59, 'minutes');
+            }),
             convertToMoment(request.endDate).add(23, 'hours').add(59, 'minutes')
         ];
         buildSelects(startDates.map(convertToDateTime), endDates.map(convertToDateTime));
@@ -31,9 +34,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 const buildSelect = (dates, dateType) => {
     const select = $(`<select class="my-select-dates-updater" dateType="${dateType}"></select>`);
-    select.append($(`<option value=""></option>`));
+    select.append($('<option value=""></option>'));
     dates.forEach((datetime) => {
-        select.append($(`<option value="${datetime.value}">${datetime.display}</option>`))
+        select.append($(`<option value="${datetime.value}">${datetime.display}</option>`));
     });
     return select;
 };
@@ -46,7 +49,7 @@ const findFirstDateAfter = (dates, search) => {
     }
     // Default to last value
     return dates[dates.length - 1].value;
-}
+};
 
 
 class EntryController {
@@ -63,7 +66,7 @@ class EntryController {
 
         this.windowLengthInput.on('change', () => {
             this._updateEndDate(endDates);
-        })
+        });
 
         this.endDateBoundCheckbox.on('change', (ev) => {
             this.endDateSelect.prop('disabled', ev.target.checked);
@@ -125,7 +128,7 @@ const buildSelects = (startDates, endDates) => {
 
 const buildApplyButtonComponent = () => {
     const li = $('<li class="float_l" style="display: inline;"></li>');
-    const button = $(`<d2l-button-subtle dir="ltr" type="button" text="Apply Dates" data-js-focus-visible=""></d2l-button-subtle>`);
+    const button = $('<d2l-button-subtle dir="ltr" type="button" text="Apply Dates" data-js-focus-visible=""></d2l-button-subtle>');
     button.on('click', applyDates);
     li.append(button);
     return li;
@@ -145,7 +148,7 @@ const waitForAttach = () => {
 
 const delayedSave = async () => {
     return new Promise((resolve) => {
-        let x = new MutationObserver(function (e) {
+        const x = new MutationObserver(function (e) {
             if (e[0].removedNodes) {
                 setTimeout(resolve, 200);
             }
@@ -158,7 +161,7 @@ const delayedSave = async () => {
 
 const changeDate = (iframe, checkboxId, dateSelectorId, new_date) => {
     const cb = iframe.contents().find(checkboxId);
-    cb.prop("checked", true);
+    cb.prop('checked', true);
     cb[0].dispatchEvent(new Event('change'));
     const df = iframe.contents().find(dateSelectorId);
     df.attr('value', new_date);
@@ -178,7 +181,7 @@ const applyDates = async (ev) => {
                 if (new_date) {
                     new_date = new_date.slice(0, -1);
                     const type = $(e).attr('dateType');
-                    let inclusion = {};
+                    const inclusion = {};
                     if (type === '3') {
                         inclusion['dueDate'] = new_date;
                         inclusion['dueElem'] = e;
@@ -193,18 +196,18 @@ const applyDates = async (ev) => {
                     acc = {
                         ...acc,
                         ...inclusion
-                    }
+                    };
                 }
                 return acc;
             }, {})
         };
     });
 
-    for (let values of actionItems) {
+    for (const values of actionItems) {
         if (values.dueDate) {
             const b = $(values.dueElem).closest('td').find('div.yui-dt-liner a');
             if (b[0]) {
-                b[0].dispatchEvent(new Event("click"));
+                b[0].dispatchEvent(new Event('click'));
                 const iframe = await waitForAttach();
                 changeDate(iframe, '#z_k', '#z_n', values.dueDate);
             }
@@ -214,10 +217,10 @@ const applyDates = async (ev) => {
         if (values.endDate || values.startDate) {
             const b = $(values.accessElem).closest('td').find('div.yui-dt-liner a');
             if (b[0]) {
-                b[0].dispatchEvent(new Event("click"));
+                b[0].dispatchEvent(new Event('click'));
                 const iframe = await waitForAttach();
                 if (values.endDate) {
-                    if (values.type === "Discussion Topic") {
+                    if (values.type === 'Discussion Topic') {
                         changeDate(iframe, '#z_v', '#z_w', values.endDate);
                     } else {
                         changeDate(iframe, '#z_r', '#z_s', values.endDate);

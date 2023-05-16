@@ -1,26 +1,28 @@
-const mountSelector = '#title-panel'
-const myInputFieldId = "d2lIDInputField"
-const searchBox = '#search'
+const mountSelector = '#title-panel';
+const myInputFieldId = 'd2lIDInputField';
+const searchBox = '#search';
 
-const handleInputFieldChange = (crn) => (ev) => {
-    document.getElementById(myInputFieldId).value = ev.target.value;
-    // Select the course from list (by CRN)
-    const search = $(searchBox);
-    search.val(crn);
-    search[0].dispatchEvent(new Event("change"));
+const handleInputFieldChange = (crn) => {
+    return (ev) => {
+        document.getElementById(myInputFieldId).value = ev.target.value;
+        // Select the course from list (by CRN)
+        const search = $(searchBox);
+        search.val(crn);
+        search[0].dispatchEvent(new Event('change'));
+    };
 };
 
 function getFormattedDate(date) {
-    let year = date.getFullYear();
-    let month = (1 + date.getMonth()).toString().padStart(2, '0');
-    let day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const month = (1 + date.getMonth()).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
 
     return month + '/' + day + '/' + year;
 }
 
 const fetchGrades = (ev) => {
     ev.preventDefault();
-    const finalGrade = window.location.hash.split('/').pop() === 'final'
+    const finalGrade = window.location.hash.split('/').pop() === 'final';
     chrome.runtime.sendMessage({
         action: 'fetch_grades',
         from: 'foreground',
@@ -38,11 +40,11 @@ const fetchGrades = (ev) => {
                 if (pNum in res) {
                     const score = res[pNum].score;
                     gradeInputSelect.val(score).change();
-                    gradeInputSelect[0].dispatchEvent(new Event("change"));
+                    gradeInputSelect[0].dispatchEvent(new Event('change'));
                     if (finalGrade && (score === 'F')) {
                         const dateInput = jQElem.find('td[data-name="lastAttendance"] input');
                         dateInput.val(getFormattedDate(new Date(res[pNum].lastDate)));
-                        dateInput[0].dispatchEvent(new Event("change"));
+                        dateInput[0].dispatchEvent(new Event('change'));
                     }
                 }
             }
@@ -56,7 +58,7 @@ const fetchGrades = (ev) => {
     });
 };
 
-const formStyles = "height: 100%;min-height: unset !important;display: flex;flex-wrap: nowrap;flex-direction: column;gap: 5px;margin: 10px;";
+const formStyles = 'height: 100%;min-height: unset !important;display: flex;flex-wrap: nowrap;flex-direction: column;gap: 5px;margin: 10px;';
 // Build Form
 const newStructure = $(`<form id="importer-form" class="component-content" style="${formStyles}">
     <h2>Current Pinned Courses:</h2>
@@ -76,10 +78,10 @@ const newStructure = $(`<form id="importer-form" class="component-content" style
     </div>
 </form>`);
 // Submit Handler
-newStructure.on('submit', fetchGrades)
+newStructure.on('submit', fetchGrades);
 // Div to Add
-const div = $('<div class="content" style="height: min-content;"></div>')
-div.append($('<div class="app-header"><h2 style="margin: 10px;">Easy Import Grades</h2></div>'))
+const div = $('<div class="content" style="height: min-content;"></div>');
+div.append($('<div class="app-header"><h2 style="margin: 10px;">Easy Import Grades</h2></div>'));
 div.append(newStructure);
 
 // Find a better way to have this run when page has finished loading
@@ -89,12 +91,12 @@ setTimeout(() => {
     chrome.runtime.sendMessage({
         action: 'fetch_pinned_courses', from: 'foreground'
     }, (res) => {
-        const mount_pnt = document.getElementById("mount_pnt");
+        const mountPnt = document.getElementById('mount_pnt');
         if (res.success) {
-            const div = $(mount_pnt);
+            const div = $(mountPnt);
             res.pinnedCourses.forEach(({id, name, code}) => {
-                const [crn, term] = code.split('.');
-                const row = $('<div></div>')
+                const [crn/*, term*/] = code.split('.');
+                const row = $('<div></div>');
                 const label = $(`<label for="${id}">${name.split(' - ')[0]}</label>`);
                 const input = $(`<input id="${id}" type="radio" name="pinned_courses" value="${id}"/>`);
                 input.on('change', handleInputFieldChange(crn));
@@ -103,7 +105,7 @@ setTimeout(() => {
                 div.append(row);
             });
         } else {
-            $(mount_pnt).append($('<p class="centered-colspan-container">No Courses matching search criteria were found.</p>'));
+            $(mountPnt).append($('<p class="centered-colspan-container">No Courses matching search criteria were found.</p>'));
         }
     });
 }, 500);

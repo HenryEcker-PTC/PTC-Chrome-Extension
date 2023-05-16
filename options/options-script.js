@@ -1,20 +1,18 @@
-/* globals Quill, chrome, uuidv4, $ */
-
-const a = document.getElementById("A");
-const b = document.getElementById("B");
-const c = document.getElementById("C");
-const d = document.getElementById("D");
-const s = document.getElementById("S");
-const m = document.getElementById("M");
-const isAdjusted = document.getElementById("adjusted");
-const bannerPattern = document.getElementById("bannerPattern");
-const enterFinalGradeD2LPattern = document.getElementById("enterFinalGradeD2LPattern");
-const editAttendanceD2LPattern = document.getElementById("editAttendanceD2LPattern");
-const attendanceRegisterCreateD2LPattern = document.getElementById("attendanceRegisterCreateD2LPattern");
-const gradeFeedbackD2LPattern = document.getElementById("gradeFeedbackD2LPattern");
-const enterZeroForMissingGrades = document.getElementById("enterZeroForMissingGrades");
-const enterZeroForMissingGradebook = document.getElementById("enterZeroForMissingGradebook");
-const bulkDateManageForAssignments = document.getElementById("bulkDateManageForAssignments");
+const a = document.getElementById('A');
+const b = document.getElementById('B');
+const c = document.getElementById('C');
+const d = document.getElementById('D');
+const s = document.getElementById('S');
+const m = document.getElementById('M');
+const isAdjusted = document.getElementById('adjusted');
+const bannerPattern = document.getElementById('bannerPattern');
+const enterFinalGradeD2LPattern = document.getElementById('enterFinalGradeD2LPattern');
+const editAttendanceD2LPattern = document.getElementById('editAttendanceD2LPattern');
+const attendanceRegisterCreateD2LPattern = document.getElementById('attendanceRegisterCreateD2LPattern');
+const gradeFeedbackD2LPattern = document.getElementById('gradeFeedbackD2LPattern');
+const enterZeroForMissingGrades = document.getElementById('enterZeroForMissingGrades');
+const enterZeroForMissingGradebook = document.getElementById('enterZeroForMissingGradebook');
+const bulkDateManageForAssignments = document.getElementById('bulkDateManageForAssignments');
 const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
 const sapAppealFetcher = document.getElementById('sapAppealFetcher');
 
@@ -205,7 +203,7 @@ icons['copy'] = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     EasyCopySpan.prototype = Object.create(Embed && Embed.prototype);
     EasyCopySpan.prototype.constructor = EasyCopySpan;
 
-    for (const prop in Embed) {
+    for (const prop of Embed) {
         EasyCopySpan[prop] = Embed[prop];
     }
 
@@ -262,7 +260,7 @@ chrome.storage.sync.get([
     'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
     'bulkDateManageForAssignments', 'commonFeedbackHTML', 'sapAppealFetcher'
-], response => {
+], (response) => {
     a.value = response.A;
     b.value = response.B;
     c.value = response.C;
@@ -287,11 +285,11 @@ const validateForm = () => {
         c.value < b.value &&
         b.value < a.value
     )) {
-        alert("Final Grade Tiers must decrease monotonically");
+        alert('Final Grade Tiers must decrease monotonically');
         return false;
     }
     if (!(m.value < s.value)) {
-        alert("Midterm Grade Tiers must decrease monotonically");
+        alert('Midterm Grade Tiers must decrease monotonically');
         return false;
     }
 
@@ -299,7 +297,7 @@ const validateForm = () => {
 };
 
 
-document.getElementById("updateGradeInfoBtn").addEventListener("click", () => {
+document.getElementById('updateGradeInfoBtn').addEventListener('click', () => {
     if (validateForm()) {
         chrome.storage.sync.set({
             A: a.value,
@@ -309,12 +307,12 @@ document.getElementById("updateGradeInfoBtn").addEventListener("click", () => {
             S: s.value,
             M: m.value,
             isAdjusted: isAdjusted.checked
-        })
+        });
     }
     return true;
 });
 
-document.getElementById("updateEnabledTools").addEventListener("click", () => {
+document.getElementById('updateEnabledTools').addEventListener('click', () => {
     if (validateForm()) {
         chrome.storage.sync.set({
             bannerPattern: bannerPattern.checked,
@@ -326,13 +324,13 @@ document.getElementById("updateEnabledTools").addEventListener("click", () => {
             enterZeroForMissingGradebook: enterZeroForMissingGradebook.checked,
             bulkDateManageForAssignments: bulkDateManageForAssignments.checked,
             sapAppealFetcher: sapAppealFetcher.checked
-        })
+        });
     }
     return true;
 });
 
-commonFeedbackSave.addEventListener('click', (ev) => {
+commonFeedbackSave.addEventListener('click', () => {
     chrome.storage.sync.set({
         commonFeedbackHTML: quill.root.innerHTML
     });
-})
+});
