@@ -1,16 +1,14 @@
-/* globals chrome, $ */
-
 const inputIdMap = {
     pNumberInput: 10633546,
     nameInput: 10633548,
     gpaInput: 10633662,
     completionRateInput: 10633663,
     timeframeInput: 10633665
-}
+};
 
 const selectIdMap = {
     semesterSelect: 10633657
-}
+};
 
 const getInputItem = (pageItemId) => {
     return $(`input[data-pageitemid="${pageItemId}"]`);
@@ -18,13 +16,17 @@ const getInputItem = (pageItemId) => {
 
 const getSelectItem = (pageItemId) => {
     return $(`select[data-pageitemid="${pageItemId}"]`);
-}
+};
+
+const dispatchEventFromJQueryToNode = (jQueryElem, triggerEvent) => {
+    jQueryElem[0].dispatchEvent(new Event(triggerEvent));
+};
 
 const doInputValue = (pageItemId, value, triggerEvent) => {
     return new Promise((resolve) => {
         const field = getInputItem(pageItemId);
         field.val(value);
-        field[0].dispatchEvent(new Event(triggerEvent));
+        dispatchEventFromJQueryToNode(field, triggerEvent);
         setTimeout(resolve, 25); // Allow time for validation to update
     });
 };
@@ -33,10 +35,10 @@ const chooseSelectSecondOption = (pageItemId) => {
     return new Promise((resolve) => {
         const select = getSelectItem(pageItemId);
         select.val(select.find('option:eq(1)').val());
-        select[0].dispatchEvent(new Event('change'));
+        dispatchEventFromJQueryToNode(select, 'change');
         setTimeout(resolve, 25);
     });
-}
+};
 
 const setDisabledPropForAllFields = (isDisabled) => {
     Object.values(inputIdMap).forEach(inputId => {
@@ -45,7 +47,7 @@ const setDisabledPropForAllFields = (isDisabled) => {
     Object.values(selectIdMap).forEach(inputId => {
         getSelectItem(inputId).prop('disabled', isDisabled);
     });
-}
+};
 
 const sendRequestForSapDetails = (value) => {
     return new Promise((resolve, reject) => {
@@ -76,19 +78,20 @@ const sendRequestForSapDetails = (value) => {
             }
         );
     });
-}
+};
 
-const pNumberChangeHandler = (ev) => {
+const pNumberChangeHandler = async (ev) => {
     ev.preventDefault();
-    setDisabledPropForAllFields(true);
-    const value = ev.target.value.toUpperCase().trim();
-    if (value.length === 0) {
-        return undefined;
+    try {
+        setDisabledPropForAllFields(true);
+        const value = ev.target.value.toUpperCase().trim();
+        if (value.length === 0) {
+            return undefined;
+        }
+        await sendRequestForSapDetails(value);
+    } finally {
+        setDisabledPropForAllFields(false);
     }
-    sendRequestForSapDetails(value)
-        .finally(() => {
-            setDisabledPropForAllFields(false);
-        });
 };
 
 getInputItem(inputIdMap.pNumberInput).on('change', pNumberChangeHandler);
