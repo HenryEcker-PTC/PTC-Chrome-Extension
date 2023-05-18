@@ -203,7 +203,8 @@ icons['copy'] = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     EasyCopySpan.prototype = Object.create(Embed && Embed.prototype);
     EasyCopySpan.prototype.constructor = EasyCopySpan;
 
-    for (const prop of Embed) {
+    // in iteration is required
+    for (const prop in Embed) {
         EasyCopySpan[prop] = Embed[prop];
     }
 
