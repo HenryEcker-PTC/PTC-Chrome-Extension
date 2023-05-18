@@ -7,12 +7,12 @@ importScripts('./background-tasks/sap-financial-aid-appeal-info-fetcher-bg.js');
 chrome.runtime.onInstalled.addListener(() => {
     // Set Defaults;
     const defaults = {
-        A: 94,
-        B: 85,
-        C: 75,
-        D: 70,
+        A: 90,
+        B: 80,
+        C: 70,
+        D: 60,
         S: 84,
-        M: 76,
+        M: 70,
         isAdjusted: false,
         bannerPattern: true,
         enterFinalGradeD2LPattern: true,
