@@ -1,4 +1,4 @@
-const getTrs = () => {
+const getBulkDateManagerTrs = () => {
     return $('#z_ck_c tbody:eq(1)').find('tr[role=row]');
 };
 
@@ -114,7 +114,7 @@ class EntryController {
 }
 
 const buildSelects = (startDates, endDates) => {
-    getTrs()
+    getBulkDateManagerTrs()
         .each((i, e) => {
             const ec = new EntryController(startDates, endDates);
             ec.attachComponentToRow($(e));
@@ -172,7 +172,7 @@ const changeDate = (iframe, checkboxId, dateSelectorId, new_date) => {
 const applyDates = async (ev) => {
     ev.preventDefault();
 
-    const actionItems = getTrs().map((i, e) => {
+    const actionItems = getBulkDateManagerTrs().map((i, e) => {
         const tr = $(e);
         return {
             type: tr.find('td[headers*="Type"]').text(),
