@@ -203,7 +203,8 @@ icons['copy'] = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     EasyCopySpan.prototype = Object.create(Embed && Embed.prototype);
     EasyCopySpan.prototype.constructor = EasyCopySpan;
 
-    // in iteration is required
+    // for-in iteration is required here for-of will not work
+    // eslint-disable-next-line guard-for-in
     for (const prop in Embed) {
         EasyCopySpan[prop] = Embed[prop];
     }
