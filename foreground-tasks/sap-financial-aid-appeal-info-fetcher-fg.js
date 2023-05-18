@@ -41,10 +41,10 @@ const chooseSelectSecondOption = (pageItemId) => {
 };
 
 const setDisabledPropForAllFields = (isDisabled) => {
-    Object.values(inputIdMap).forEach(inputId => {
+    Object.values(inputIdMap).forEach((inputId) => {
         getInputItem(inputId).prop('disabled', isDisabled);
     });
-    Object.values(selectIdMap).forEach(inputId => {
+    Object.values(selectIdMap).forEach((inputId) => {
         getSelectItem(inputId).prop('disabled', isDisabled);
     });
 };
