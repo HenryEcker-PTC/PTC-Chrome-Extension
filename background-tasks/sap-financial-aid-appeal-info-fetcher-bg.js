@@ -86,7 +86,7 @@ const getStudentSAPFields = (pNumber, sendResponse) => {
             if (studentDegreeAndSchool === undefined) {
                 return sendResponse({success: false});
             }
-            studentSAPDetails(studentDegreeAndSchool.pNumber, studentDegreeAndSchool.school, studentDegreeAndSchool.degree)
+            return studentSAPDetails(studentDegreeAndSchool.pNumber, studentDegreeAndSchool.school, studentDegreeAndSchool.degree)
                 .then((sapResponse) => {
                     if (sapResponse === undefined) {
                         return sendResponse({success: false});
@@ -100,5 +100,8 @@ const getStudentSAPFields = (pNumber, sendResponse) => {
                         completionRate: sapResponse.PRGCMPRATE
                     });
                 });
+        })
+        .catch(() => {
+            sendResponse({success: false, message: 'Try opening DegreeWorks in another tab, log in (if needed), and then return here to click OK (page will refresh).'})
         });
 };

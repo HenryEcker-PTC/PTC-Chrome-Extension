@@ -73,7 +73,7 @@ const sendRequestForSapDetails = (value) => {
                     void await doInputValue(inputIdMap.timeframeInput, res.timeframe, 'change');
                     resolve();
                 } else {
-                    reject();
+                    reject(res);
                 }
             }
         );
@@ -89,6 +89,12 @@ const pNumberChangeHandler = async (ev) => {
             return undefined;
         }
         await sendRequestForSapDetails(value);
+    } catch (e) {
+        if (Object.hasOwn(e, 'message')) {
+            if (window.confirm(e.message)) {
+                window.location.reload();
+            }
+        }
     } finally {
         setDisabledPropForAllFields(false);
     }
