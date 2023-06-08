@@ -2,7 +2,7 @@ importScripts('./background-tasks/fetch-grades-bg.js');
 importScripts('./background-tasks/fetch-dates-for-register-bg.js');
 importScripts('./modules/moment.min.js');
 importScripts('./background-tasks/fetch-common-grade-feedback-html-bg.js');
-importScripts('./background-tasks/sap-financial-aid-appeal-info-fetcher-bg.js');
+importScripts('./background-tasks/fetch-from-degreeworks-bg.js');
 
 chrome.runtime.onInstalled.addListener(() => {
     // Set Defaults;
@@ -23,13 +23,16 @@ chrome.runtime.onInstalled.addListener(() => {
         enterZeroForMissingGradebook: true,
         bulkDateManageForAssignments: true,
         commonFeedbackHTML: '',
-        sapAppealFetcher: false
+        sapAppealFetcher: false,
+        changeOfMajorFetcher: false
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
         // Set Default For Unset values:
         chrome.storage.sync.set(
-            Object.keys(defaults).filter((r) => { return !(r in results); })
+            Object.keys(defaults).filter((r) => {
+                return !(r in results);
+            })
                 .reduce((obj, key) => {
                     obj[key] = defaults[key];
                     return obj;
@@ -80,7 +83,9 @@ const injectScript = (tabId, file) => {
 
 
 const injectScripts = (tabId, files) => {
-    files.map((file) => { return injectScript(tabId, file); });
+    files.map((file) => {
+        return injectScript(tabId, file);
+    });
 };
 
 
@@ -141,6 +146,12 @@ const patterns = [
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=98792.*?&page=123525/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/sap-financial-aid-appeal-info-fetcher-fg.js'],
         './injected-only.html'
+    ),
+    new PagePattern(
+        'changeOfMajorFetcher',
+        /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=138821.*?&page=158494/,
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/change-of-major-form-fg.js'],
+        './injected-only.html'
     )
 ];
 
@@ -184,7 +195,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({location: 'no%20op.html'});
             }
         });
-
     } else if (request.action === 'fetch_grades' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         getGrades(request.d2lid, request.isFinal, sendResponse);
@@ -201,7 +211,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getCommonFeedbackHTML(sendResponse);
     } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
-        getStudentSAPFields(request.pNumber, sendResponse);
+        void getStudentSAPFields(request.pNumber, sendResponse);
+    } else if (request.action === 'request_change_of_major_details' && request.from === 'foreground') {
+        // eslint-disable-next-line no-undef
+        void getStudentChangeOfMajorFields(request.pNumber, sendResponse);
     }
     return true;
 });

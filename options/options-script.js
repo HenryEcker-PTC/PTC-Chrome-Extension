@@ -15,6 +15,7 @@ const enterZeroForMissingGradebook = document.getElementById('enterZeroForMissin
 const bulkDateManageForAssignments = document.getElementById('bulkDateManageForAssignments');
 const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
 const sapAppealFetcher = document.getElementById('sapAppealFetcher');
+const changeOfMajorFetcher = document.getElementById('changeOfMajorFetcher');
 
 /* Text Editor */
 /* Custom Icon */
@@ -261,7 +262,7 @@ chrome.storage.sync.get([
     'bannerPattern', 'enterFinalGradeD2LPattern', 'editAttendanceD2LPattern',
     'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
-    'bulkDateManageForAssignments', 'commonFeedbackHTML', 'sapAppealFetcher'
+    'bulkDateManageForAssignments', 'commonFeedbackHTML', 'sapAppealFetcher', 'changeOfMajorFetcher'
 ], (response) => {
     a.value = response.A;
     b.value = response.B;
@@ -280,6 +281,7 @@ chrome.storage.sync.get([
     bulkDateManageForAssignments.checked = response.bulkDateManageForAssignments;
     quill.root.innerHTML = response.commonFeedbackHTML || '';
     sapAppealFetcher.checked = response.sapAppealFetcher;
+    changeOfMajorFetcher.checked = response.changeOfMajorFetcher;
 });
 
 const validateForm = () => {
@@ -325,7 +327,8 @@ document.getElementById('updateEnabledTools').addEventListener('click', () => {
             enterZeroForMissingGrades: enterZeroForMissingGrades.checked,
             enterZeroForMissingGradebook: enterZeroForMissingGradebook.checked,
             bulkDateManageForAssignments: bulkDateManageForAssignments.checked,
-            sapAppealFetcher: sapAppealFetcher.checked
+            sapAppealFetcher: sapAppealFetcher.checked,
+            changeOfMajorFetcher: changeOfMajorFetcher.checked
         });
     }
     return true;
