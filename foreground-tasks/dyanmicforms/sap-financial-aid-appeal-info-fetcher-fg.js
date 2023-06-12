@@ -10,27 +10,6 @@ const selectIdMap = {
     semesterSelect: 10633657
 };
 
-const getInputItem = (pageItemId) => {
-    return $(`input[data-pageitemid="${pageItemId}"]`);
-};
-
-const getSelectItem = (pageItemId) => {
-    return $(`select[data-pageitemid="${pageItemId}"]`);
-};
-
-const dispatchEventFromJQueryToNode = (jQueryElem, triggerEvent) => {
-    jQueryElem[0].dispatchEvent(new Event(triggerEvent));
-};
-
-const doInputValue = (pageItemId, value, triggerEvent) => {
-    return new Promise((resolve) => {
-        const field = getInputItem(pageItemId);
-        field.val(value);
-        dispatchEventFromJQueryToNode(field, triggerEvent);
-        setTimeout(resolve, 25); // Allow time for validation to update
-    });
-};
-
 const chooseSelectSecondOption = (pageItemId) => {
     return new Promise((resolve) => {
         const select = getSelectItem(pageItemId);
@@ -42,10 +21,10 @@ const chooseSelectSecondOption = (pageItemId) => {
 
 const setDisabledPropForAllFields = (isDisabled) => {
     Object.values(inputIdMap).forEach((inputId) => {
-        getInputItem(inputId).prop('disabled', isDisabled);
+        propDisable(getInputItem(inputId), isDisabled);
     });
-    Object.values(selectIdMap).forEach((inputId) => {
-        getSelectItem(inputId).prop('disabled', isDisabled);
+    Object.values(selectIdMap).forEach((selectId) => {
+        propDisable(getSelectItem(selectId), isDisabled);
     });
 };
 

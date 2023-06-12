@@ -96,17 +96,19 @@ const studentChangeOfMajorDetails = (pNumber, school, degree) => {
 };
 
 const getStudentFirstLastName = (rawName) => {
-    const [last, first] = rawName.split(', ');
+    const [last, firstMiddle] = rawName.split(/,\s*/);
+    const [first, middle] = firstMiddle.split(/\s+(.*)/, 2);
     return {
         firstName: first,
+        middleName: middle,
         lastName: last
     };
 }
 
-const reorderCommaName = (rawName) => {
-    const {firstName, lastName} = getStudentFirstLastName(rawName);
-    return `${firstName.trim()} ${lastName.trim()}`;
-};
+const getReorderedFullName = (rawName) => {
+    const {firstName, middleName, lastName} = getStudentFirstLastName(rawName);
+    return `${firstName.trim()} ${middleName.trim()} ${lastName.trim()}`;
+}
 
 // Exported function
 // eslint-disable-next-line no-unused-vars
@@ -118,7 +120,7 @@ const getStudentSAPFields = async (pNumberRequest, sendResponse) => {
         return sendResponse({
             success: true,
             pNumber: pNumber,
-            name: reorderCommaName(name),
+            name: getReorderedFullName(name),
             gpa: SAP_GPA,
             timeframe: TIMEFRAME,
             completionRate: PRGCMPRATE
@@ -132,7 +134,7 @@ const getStudentSAPFields = async (pNumberRequest, sendResponse) => {
     }
 };
 
-const getStudentChangeOfMajorFields = async (pNumberRequest, sendResponse) => {
+const getStudentBasicContactInfo = async (pNumberRequest, sendResponse) => {
     try {
         const {pNumber, name, school, degree, majorCode} = await getStudentSchoolAndDegree(pNumberRequest);
         const {CELL_PHONE, HOME_PHONE} = await studentChangeOfMajorDetails(pNumber, school, degree);

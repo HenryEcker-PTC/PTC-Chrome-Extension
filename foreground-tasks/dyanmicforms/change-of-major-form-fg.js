@@ -6,19 +6,6 @@ const inputIdMap = {
     currentMajorCode: 13827255
 };
 
-const getInputItem = (pageItemId) => {
-    return document.querySelector(`input[data-pageitemid="${pageItemId}"]`);
-};
-
-const doInputValue = (pageItemId, value, triggerEvent) => {
-    return new Promise((resolve) => {
-        const field = getInputItem(pageItemId);
-        field.value = value;
-        field.dispatchEvent(new Event(triggerEvent, {bubbles: true}));
-        setTimeout(resolve, 25); // Allow time for validation to update
-    });
-};
-
 const sendRequestForChangeOfMajorDetails = (value) => {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({
@@ -27,7 +14,6 @@ const sendRequestForChangeOfMajorDetails = (value) => {
                 pNumber: value
             },
             async (res) => {
-                console.log(res);
                 if (chrome.runtime.lastError) {
                     console.error('Error');
                 }
@@ -45,9 +31,8 @@ const sendRequestForChangeOfMajorDetails = (value) => {
                     void await doInputValue(inputIdMap.lastNameInput, lastName, 'change');
                     // Current Major Code
                     void await doInputValue(inputIdMap.currentMajorCode, currentMajorCode, 'change');
-                    // Cell Phone (Obsolete approach, wish there was something better)
-                    getInputItem(inputIdMap.cellPhoneNumber).focus();
-                    document.execCommand('insertText', false, cellPhone);
+                    // Cell Phone
+                    doCellPhoneInput(getInputItem(inputIdMap.cellPhoneNumber), cellPhone);
                     resolve();
                 } else {
                     reject(res);
@@ -74,16 +59,16 @@ const pNumberChangeHandler = async (ev) => {
             }
         }
     } finally {
-        getInputItem(inputIdMap.firstNameInput).disabled = false;
-        getInputItem(inputIdMap.lastNameInput).disabled = false;
+        propDisable(getInputItem(inputIdMap.firstNameInput), false);
+        propDisable(getInputItem(inputIdMap.lastNameInput), false);
     }
 };
 
 
 (function () {
     // Disable these to indicate filling PNumber
-    getInputItem(inputIdMap.firstNameInput).disabled = true;
-    getInputItem(inputIdMap.lastNameInput).disabled = true;
+    propDisable(getInputItem(inputIdMap.firstNameInput), true);
+    propDisable(getInputItem(inputIdMap.lastNameInput), true);
     // Add Event Listener
-    getInputItem(inputIdMap.pNumberInput).addEventListener('input', pNumberChangeHandler);
+    getInputItem(inputIdMap.pNumberInput).on('input', pNumberChangeHandler);
 })();

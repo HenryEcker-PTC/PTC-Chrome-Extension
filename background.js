@@ -144,13 +144,19 @@ const patterns = [
     new PagePattern(
         'sapAppealFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=98792.*?&page=123525/,
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/sap-financial-aid-appeal-info-fetcher-fg.js'],
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/sap-financial-aid-appeal-info-fetcher-fg.js'],
         './injected-only.html'
     ),
     new PagePattern(
         'changeOfMajorFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=138821.*?&page=158494/,
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/change-of-major-form-fg.js'],
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/change-of-major-form-fg.js'],
+        './injected-only.html'
+    ),
+    new PagePattern(
+        'semesterWithdrawalFormFetcher',
+        /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=119802.*?&page=141643/,
+        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/semester-withdrawal-form-fg.js'],
         './injected-only.html'
     )
 ];
@@ -212,9 +218,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentSAPFields(request.pNumber, sendResponse);
-    } else if (request.action === 'request_change_of_major_details' && request.from === 'foreground') {
+    } else if (['request_change_of_major_details', 'request_semester_withdrawal_details'].includes(request.action) && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
-        void getStudentChangeOfMajorFields(request.pNumber, sendResponse);
+        void getStudentBasicContactInfo(request.pNumber, sendResponse);
     }
     return true;
 });

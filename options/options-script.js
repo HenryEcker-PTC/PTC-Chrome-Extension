@@ -16,6 +16,7 @@ const bulkDateManageForAssignments = document.getElementById('bulkDateManageForA
 const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
 const sapAppealFetcher = document.getElementById('sapAppealFetcher');
 const changeOfMajorFetcher = document.getElementById('changeOfMajorFetcher');
+const semesterWithdrawalFormFetcher = document.getElementById('semesterWithdrawalFormFetcher');
 
 /* Text Editor */
 /* Custom Icon */
@@ -262,7 +263,8 @@ chrome.storage.sync.get([
     'bannerPattern', 'enterFinalGradeD2LPattern', 'editAttendanceD2LPattern',
     'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
-    'bulkDateManageForAssignments', 'commonFeedbackHTML', 'sapAppealFetcher', 'changeOfMajorFetcher'
+    'bulkDateManageForAssignments', 'commonFeedbackHTML',
+    'sapAppealFetcher', 'changeOfMajorFetcher', 'semesterWithdrawalFormFetcher'
 ], (response) => {
     a.value = response.A;
     b.value = response.B;
@@ -282,6 +284,7 @@ chrome.storage.sync.get([
     quill.root.innerHTML = response.commonFeedbackHTML || '';
     sapAppealFetcher.checked = response.sapAppealFetcher;
     changeOfMajorFetcher.checked = response.changeOfMajorFetcher;
+    semesterWithdrawalFormFetcher.checked = response.semesterWithdrawalFormFetcher;
 });
 
 const validateForm = () => {
@@ -328,7 +331,8 @@ document.getElementById('updateEnabledTools').addEventListener('click', () => {
             enterZeroForMissingGradebook: enterZeroForMissingGradebook.checked,
             bulkDateManageForAssignments: bulkDateManageForAssignments.checked,
             sapAppealFetcher: sapAppealFetcher.checked,
-            changeOfMajorFetcher: changeOfMajorFetcher.checked
+            changeOfMajorFetcher: changeOfMajorFetcher.checked,
+            semesterWithdrawalFormFetcher: semesterWithdrawalFormFetcher.checked
         });
     }
     return true;
