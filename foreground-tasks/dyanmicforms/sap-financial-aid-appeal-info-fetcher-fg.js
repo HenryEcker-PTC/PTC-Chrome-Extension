@@ -13,8 +13,8 @@ const selectIdMap = {
 const chooseSelectSecondOption = (pageItemId) => {
     return new Promise((resolve) => {
         const select = getSelectItem(pageItemId);
-        select.val(select.find('option:eq(1)').val());
-        dispatchEventFromJQueryToNode(select, 'change');
+        select.value = select.querySelectorAll('option')[1].value;
+        select.dispatchEvent(new Event('change', {bubbles: true}));
         setTimeout(resolve, 25);
     });
 };
@@ -79,4 +79,4 @@ const pNumberChangeHandler = async (ev) => {
     }
 };
 
-getInputItem(inputIdMap.pNumberInput).on('change', pNumberChangeHandler);
+getInputItem(inputIdMap.pNumberInput).addEventListener('change', pNumberChangeHandler);

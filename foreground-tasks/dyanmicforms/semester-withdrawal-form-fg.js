@@ -66,5 +66,5 @@ const pNumberChangeHandler = async (ev) => {
     propDisable(getInputItem(inputIdMap.firstNameInput), true);
     propDisable(getInputItem(inputIdMap.lastNameInput), true);
     // Add Event Listener
-    getInputItem(inputIdMap.pNumberInput).on('input', pNumberChangeHandler);
+    getInputItem(inputIdMap.pNumberInput).addEventListener('input', pNumberChangeHandler);
 })();

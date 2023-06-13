@@ -144,19 +144,19 @@ const patterns = [
     new PagePattern(
         'sapAppealFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=98792.*?&page=123525/,
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/sap-financial-aid-appeal-info-fetcher-fg.js'],
+        ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/sap-financial-aid-appeal-info-fetcher-fg.js'],
         './injected-only.html'
     ),
     new PagePattern(
         'changeOfMajorFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=138821.*?&page=158494/,
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/change-of-major-form-fg.js'],
+        ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/change-of-major-form-fg.js'],
         './injected-only.html'
     ),
     new PagePattern(
         'semesterWithdrawalFormFetcher',
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=119802.*?&page=141643/,
-        ['./modules/jquery-3.6.0.min.js', './foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/semester-withdrawal-form-fg.js'],
+        ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/semester-withdrawal-form-fg.js'],
         './injected-only.html'
     )
 ];
