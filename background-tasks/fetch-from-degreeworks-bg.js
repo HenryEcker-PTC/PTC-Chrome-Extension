@@ -95,19 +95,20 @@ const studentChangeOfMajorDetails = (pNumber, school, degree) => {
     return fetchStudentAuditInformation(pNumber, school, degree, ["CELL_PHONE", "HOME_PHONE"]);
 };
 
-const getStudentFirstLastName = (rawName) => {
+const parseStudentNameParts = (rawName) => {
     const [last, firstMiddle] = rawName.split(/,\s*/);
     const [first, middle] = firstMiddle.split(/\s+(.*)/, 2);
     return {
-        firstName: first,
-        middleName: middle,
-        lastName: last
+        firstMiddleName: firstMiddle.trim(),
+        firstName: first.trim(),
+        middleName: middle.trim(),
+        lastName: last.trim()
     };
 }
 
 const getReorderedFullName = (rawName) => {
-    const {firstName, middleName, lastName} = getStudentFirstLastName(rawName);
-    return `${firstName.trim()} ${middleName.trim()} ${lastName.trim()}`;
+    const {firstMiddleName, lastName} = parseStudentNameParts(rawName);
+    return `${firstMiddleName} ${lastName}`;
 }
 
 // Exported function
@@ -138,7 +139,7 @@ const getStudentBasicContactInfo = async (pNumberRequest, sendResponse) => {
     try {
         const {pNumber, name, school, degree, majorCode} = await getStudentSchoolAndDegree(pNumberRequest);
         const {CELL_PHONE, HOME_PHONE} = await studentChangeOfMajorDetails(pNumber, school, degree);
-        const {firstName, lastName} = getStudentFirstLastName(name);
+        const {firstName, lastName} = parseStudentNameParts(name);
         sendResponse({
             success: true,
             data: {
