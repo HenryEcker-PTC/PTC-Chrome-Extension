@@ -24,7 +24,8 @@ chrome.runtime.onInstalled.addListener(() => {
         bulkDateManageForAssignments: true,
         commonFeedbackHTML: '',
         sapAppealFetcher: false,
-        changeOfMajorFetcher: false
+        changeOfMajorFetcher: false,
+        apContractFormFetcher: false
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
@@ -158,6 +159,12 @@ const patterns = [
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=119802.*?&page=141643/,
         ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/semester-withdrawal-form-fg.js'],
         './injected-only.html'
+    ),
+    new PagePattern(
+        'apContractFormFetcher',
+        /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=380225.*?&page=325897/,
+        ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/ap-contract-form-fg.js'],
+        './injected-only.html'
     )
 ];
 
@@ -218,7 +225,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentSAPFields(request.pNumber, sendResponse);
-    } else if (['request_change_of_major_details', 'request_semester_withdrawal_details'].includes(request.action) && request.from === 'foreground') {
+    } else if (['request_change_of_major_details', 'request_semester_withdrawal_details', 'request_semester_ap_contract_details'].includes(request.action) && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentBasicContactInfo(request.pNumber, sendResponse);
     }
