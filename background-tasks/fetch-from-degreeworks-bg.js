@@ -101,7 +101,7 @@ const parseStudentNameParts = (rawName) => {
     return {
         firstMiddleName: firstMiddle.trim(),
         firstName: first.trim(),
-        middleName: middle.trim(),
+        middleName: (middle ?? '').trim(),
         lastName: last.trim()
     };
 }
