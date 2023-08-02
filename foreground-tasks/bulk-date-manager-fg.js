@@ -1,5 +1,5 @@
 const getBulkDateManagerTrs = () => {
-    return $('#z_ck_c tbody:eq(1)').find('tr[role=row]');
+    return $('#z_cl_c tbody:eq(1)').find('tr[role=row]');
 };
 
 const convertToMoment = (m) => {
