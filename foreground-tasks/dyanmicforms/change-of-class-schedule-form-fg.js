@@ -113,20 +113,85 @@ const sendRequestForClassDetails = (value) => {
     });
 };
 
+const buildAndAttachCurrentClassesDialog = (termCode, courses) => {
+    const dialog = document.createElement('dialog');
+    dialog.style.display = 'block';
+    dialog.style.position = 'fixed';
+    dialog.style.top = 0;
+    dialog.style.marginRight = '2%';
+    dialog.style.zIndex = '1000';
+
+    const h2 = document.createElement('h2');
+    h2.innerText = `Student ${termCode} Course List (according to DegreeWorks)`;
+    const table = document.createElement('table');
+    {
+        const thead = document.createElement('thead');
+        const tr = document.createElement('tr');
+        for (const field of ['CRN', 'Course Title', 'Subject', 'Course Number', 'Section Number', 'Term Code']) {
+            const th = document.createElement('th');
+            th.style.padding = '7px';
+            th.innerText = field;
+            tr.append(th);
+        }
+        thead.append(tr);
+        table.append(thead);
+    }
+    {
+        const tbody = document.createElement('tbody');
+        for (const [crn, {subject, number, section, term, courseTitle}] of Object.entries(courses)) {
+            const tr = document.createElement('tr');
+            for (const value of [crn, courseTitle, subject, number, section, term]) {
+                const td = document.createElement('td');
+                td.innerText = value;
+                td.style.padding = '7px';
+                tr.append(td);
+            }
+            tbody.append(tr);
+        }
+        table.append(tbody);
+    }
+    dialog.append(
+        h2,
+        table
+    )
+    document.getElementsByTagName('body')[0].prepend(dialog);
+}
+
 const dropClassChangeHandler = async (ev) => {
     const isChecked = ev.target.checked;
+    if (!isChecked) {
+        return;
+    }
 
     const value = getInputItem(inputIdMap.pNumberInput).value.toUpperCase().trim();
-    if (!isChecked || value.length === 0) {
-        return undefined;
+    if (value.length === 0) {
+        alert('Missing student P Number');
+        return;
     }
+
+    const currentTerm = getSelectItem(selectIdMap.termSelect).value;
+    if (currentTerm.length === 0) {
+        alert('Select a term first!');
+        return;
+    }
+
     try {
         for (const [crnFieldId, {subjectCourse, section}] of Object.entries(dropClassFields)) {
             propDisable(getInputItem(crnFieldId), true);
             propDisable(getInputItem(subjectCourse), true);
             propDisable(getInputItem(section), true);
         }
+
         const classInfo = await sendRequestForClassDetails(value);
+        const selectedTermClasses = Object.entries(classInfo).reduce((acc, [crn, courseEntry]) => {
+            if (courseEntry.term.localeCompare(currentTerm) === 0) {
+                acc[crn] = courseEntry;
+            }
+            return acc;
+        }, {});
+
+        buildAndAttachCurrentClassesDialog(currentTerm, selectedTermClasses);
+
         for (const [crnFieldId, {subjectCourse, section}] of Object.entries(dropClassFields)) {
             getInputItem(crnFieldId).addEventListener('blur', async (crnInputEv) => {
                 try {
@@ -136,9 +201,9 @@ const dropClassChangeHandler = async (ev) => {
                         return undefined;
                     }
 
-                    const course = classInfo[crnValue];
+                    const course = selectedTermClasses[crnValue];
                     if (course === undefined) {
-                        alert('No entry with that value found in student\'s course history');
+                        alert('No entry with that crn found in student\'s current courses');
                         return;
                     }
 
