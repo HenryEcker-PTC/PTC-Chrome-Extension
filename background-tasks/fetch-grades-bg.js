@@ -99,7 +99,7 @@ const getAllResponses = async (initialURL) => {
     const url = new URL(initialURL);
     let result = {Items: [], PagingInfo: {HasMoreItems: true}};
     while (result.PagingInfo.HasMoreItems) {
-        const response = await fetch(url.toString()).then((res) => {
+        const response = await fetch(url).then((res) => {
             return res.json();
         });
         result = {Items: [...result.Items, ...response.Items], PagingInfo: response.PagingInfo};
