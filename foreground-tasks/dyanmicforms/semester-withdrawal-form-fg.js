@@ -17,7 +17,6 @@ const sendRequestForSemesterWithdrawalForm = (value) => {
                     console.error('Error');
                 }
                 if (res.success === true) {
-                    console.log(res.data);
                     const {
                         firstName,
                         lastName,
@@ -43,7 +42,6 @@ const pNumberChangeHandler = async (ev) => {
     ev.preventDefault();
     try {
         const value = ev.target.value.toUpperCase().trim();
-        console.log(value);
         if (value.length === 0) {
             return undefined;
         }

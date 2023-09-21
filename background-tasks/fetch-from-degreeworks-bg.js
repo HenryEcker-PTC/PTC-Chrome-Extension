@@ -65,8 +65,24 @@ const getStudentSchoolAndDegree = async (pNumber) => {
 
 };
 
+const doAuditFetch = async (pNumber, school, degree) => {
+    const url = new URL('https://degreeworks.ptc.edu/Dashboard/api/audit');
+    url.searchParams.set('studentId', pNumber); // string
+    url.searchParams.set('school', school); // string
+    url.searchParams.set('degree', degree); // string
+    url.searchParams.set('is-process-new', true); // boolean
+    url.searchParams.set('audit-type', 'AA'); // string
+    url.searchParams.set('auditId', ''); // unknown
+    url.searchParams.set('include-inprogress', true); // boolean
+    url.searchParams.set('include-preregistered', true); // boolean
+    url.searchParams.set('aid-term', ''); // unknown
 
-const destructureStudentAuditInformationResponse = (resData) => {
+    const res = await fetch(url);
+    return await res.json();
+}
+
+
+const destructureAuditToGetReportArray = (resData) => {
     try {
         const {
             degreeInformation: {
@@ -80,30 +96,39 @@ const destructureStudentAuditInformationResponse = (resData) => {
     }
 }
 
-const processDestructuredStudentAuditInformationResponse = ({reportArray}) => {
+const processDestructuredAuditReportArray = ({reportArray}) => {
     if (reportArray === undefined || reportArray.length === 0) {
         throw new Error("Audit response undefined");
     }
     return {reportArray};
 }
 
+const destructureAuditToGetClassArray = (resData) => {
+    try {
+        const {
+            classInformation: {
+                classArray
+            }
+        } = resData;
+
+        return {classArray};
+    } catch (_) {
+        throw new Error("Audit response undefined");
+    }
+}
+
+const processDestructuredAuditClassArray = ({classArray}) => {
+    if (classArray === undefined || classArray.length === 0) {
+        throw new Error("Audit response undefined");
+    }
+    return {classArray};
+}
+
 const fetchStudentAuditInformation = async (pNumber, school, degree, requestedFields) => {
-    const url = new URL('https://degreeworks.ptc.edu/Dashboard/api/audit');
-    url.searchParams.set('studentId', pNumber); // string
-    url.searchParams.set('school', school); // string
-    url.searchParams.set('degree', degree); // string
-    url.searchParams.set('is-process-new', true); // boolean
-    url.searchParams.set('audit-type', 'AA'); // string
-    url.searchParams.set('auditId', ''); // unknown
-    url.searchParams.set('include-inprogress', true); // boolean
-    url.searchParams.set('include-preregistered', true); // boolean
-    url.searchParams.set('aid-term', ''); // unknown
+    const resData = await doAuditFetch(pNumber, school, degree);
 
-    const res = await fetch(url);
-    const resData = await res.json();
-
-    const {reportArray} = processDestructuredStudentAuditInformationResponse(
-        destructureStudentAuditInformationResponse(resData)
+    const {reportArray} = processDestructuredAuditReportArray(
+        destructureAuditToGetReportArray(resData)
     );
     const sapFields = reportArray.filter((report) => {
         return requestedFields.includes(report.code);
@@ -112,6 +137,31 @@ const fetchStudentAuditInformation = async (pNumber, school, degree, requestedFi
         return {...acc, [report.code]: report.value};
     }, {});
 };
+
+
+const fetchStudentClassInformation = async (pNumber, school, degree) => {
+    const resData = await doAuditFetch(pNumber, school, degree);
+
+    const {classArray} = processDestructuredAuditClassArray(
+        destructureAuditToGetClassArray(resData)
+    );
+
+    return classArray.reduce((acc, classEntry) => {
+        const {
+            discipline,
+            number,
+            section,
+            term,
+            courseTitle,
+            attributeArray: [{value: crn}]
+        } = classEntry;
+
+        return {
+            ...acc,
+            [crn]: {subject: discipline, number, section, term, courseTitle}
+        }
+    }, {});
+}
 
 const studentSAPDetails = (pNumber, school, degree) => {
     return fetchStudentAuditInformation(pNumber, school, degree, ['SAP_GPA', 'TIMEFRAME', 'PRGCMPRATE']);
@@ -184,3 +234,20 @@ const getStudentBasicContactInfo = async (pNumberRequest, sendResponse) => {
         });
     }
 };
+
+const getStudentCourseInfo = async (pNumberRequest, sendResponse) => {
+    try {
+        const {pNumber, school, degree} = await getStudentSchoolAndDegree(pNumberRequest);
+        const classInfo = await fetchStudentClassInformation(pNumber, school, degree);
+        sendResponse({
+            success: true,
+            data: classInfo
+        });
+    } catch (e) {
+        console.error(e);
+        sendResponse({
+            success: false,
+            message: 'Try opening DegreeWorks in another tab, log in (if needed), and then return here to click OK (page will refresh).'
+        });
+    }
+}

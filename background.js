@@ -25,7 +25,8 @@ chrome.runtime.onInstalled.addListener(() => {
         commonFeedbackHTML: '',
         sapAppealFetcher: false,
         changeOfMajorFetcher: false,
-        apContractFormFetcher: false
+        apContractFormFetcher: false,
+        changeOfClassScheduleFormFetcher: false
     };
     // Test Which defaults already have values
     chrome.storage.sync.get(Array.from(Object.keys(defaults)), (results) => {
@@ -165,6 +166,12 @@ const patterns = [
         /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=380225.*?&page=325897/,
         ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/ap-contract-form-fg.js'],
         './injected-only.html'
+    ),
+    new PagePattern(
+        'changeOfClassScheduleFormFetcher',
+        /^https:\/\/dynamicforms.ngwebsolutions.com\/Submit\/Page\?.*?&section=182312.*?&page=191058/,
+        ['./foreground-tasks/dyanmicforms/dynamicforms-helper-fg.js', './foreground-tasks/dyanmicforms/change-of-class-schedule-form-fg.js'],
+        './injected-only.html'
     )
 ];
 
@@ -225,9 +232,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentSAPFields(request.pNumber, sendResponse);
-    } else if (['request_change_of_major_details', 'request_semester_withdrawal_details', 'request_semester_ap_contract_details'].includes(request.action) && request.from === 'foreground') {
+    } else if (['request_change_of_major_details', 'request_semester_withdrawal_details', 'request_semester_ap_contract_details', 'request_change_of_schedule_form_details'].includes(request.action) && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentBasicContactInfo(request.pNumber, sendResponse);
+    } else if (request.action === 'request_student_class_details' && request.from === 'foreground') {
+        void getStudentCourseInfo(request.pNumber, sendResponse);
     }
     return true;
 });

@@ -10,15 +10,6 @@ const selectIdMap = {
     semesterSelect: 10633657
 };
 
-const chooseSelectSecondOption = (pageItemId) => {
-    return new Promise((resolve) => {
-        const select = getSelectItem(pageItemId);
-        select.value = select.querySelectorAll('option')[1].value;
-        select.dispatchEvent(new Event('change', {bubbles: true}));
-        setTimeout(resolve, 25);
-    });
-};
-
 const setDisabledPropForAllFields = (isDisabled) => {
     Object.values(inputIdMap).forEach((inputId) => {
         propDisable(getInputItem(inputId), isDisabled);
