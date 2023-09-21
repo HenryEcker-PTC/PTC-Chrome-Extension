@@ -16,6 +16,8 @@ const doInputValue = (pageItemId, value, triggerEvent) => {
 };
 
 const doCellPhoneInput = (nodeElem, cellPhone) => {
+    // Ensure clear
+    nodeElem.value = '';
     // Cell Phone (Obsolete approach, wish there was something better)
     nodeElem.focus();
     document.execCommand('insertText', false, cellPhone);
