@@ -115,6 +115,7 @@ const sendRequestForClassDetails = (value) => {
 
 const buildAndAttachCurrentClassesDialog = (termCode, courses) => {
     const dialog = document.createElement('dialog');
+    dialog.id = 'ptcToolsCurrentClassDialog';
     dialog.style.display = 'block';
     dialog.style.position = 'fixed';
     dialog.style.top = 0;
@@ -124,40 +125,52 @@ const buildAndAttachCurrentClassesDialog = (termCode, courses) => {
     const h2 = document.createElement('h2');
     h2.innerText = `Student ${termCode} Course List (according to DegreeWorks)`;
     const table = document.createElement('table');
-    {
-        const thead = document.createElement('thead');
-        const tr = document.createElement('tr');
-        for (const field of ['CRN', 'Course Title', 'Subject', 'Course Number', 'Section Number', 'Term Code']) {
-            const th = document.createElement('th');
-            th.style.padding = '7px';
-            th.innerText = field;
-            tr.append(th);
-        }
-        thead.append(tr);
-        table.append(thead);
-    }
-    {
-        const tbody = document.createElement('tbody');
-        for (const [crn, {subject, number, section, term, courseTitle}] of Object.entries(courses)) {
+    if (Object.keys(courses).length !== 0) {
+        {
+            const thead = document.createElement('thead');
             const tr = document.createElement('tr');
-            for (const value of [crn, courseTitle, subject, number, section, term]) {
-                const td = document.createElement('td');
-                td.innerText = value;
-                td.style.padding = '7px';
-                tr.append(td);
+            for (const field of ['CRN', 'Course Title', 'Subject', 'Course Number', 'Section Number', 'Term Code']) {
+                const th = document.createElement('th');
+                th.style.padding = '7px';
+                th.innerText = field;
+                tr.append(th);
             }
-            tbody.append(tr);
+            thead.append(tr);
+            table.append(thead);
         }
-        table.append(tbody);
+        {
+            const tbody = document.createElement('tbody');
+            for (const [crn, {subject, number, section, term, courseTitle}] of Object.entries(courses)) {
+                const tr = document.createElement('tr');
+                for (const value of [crn, courseTitle, subject, number, section, term]) {
+                    const td = document.createElement('td');
+                    td.innerText = value;
+                    td.style.padding = '7px';
+                    tr.append(td);
+                }
+                tbody.append(tr);
+            }
+            table.append(tbody);
+        }
+
+        dialog.append(
+            h2,
+            table
+        );
+    } else {
+        const p = document.createElement('p');
+        p.innerText = 'No classes found in the given term';
+        dialog.append(
+            h2,
+            p
+        );
     }
-    dialog.append(
-        h2,
-        table
-    )
     document.getElementsByTagName('body')[0].prepend(dialog);
 }
 
 const dropClassChangeHandler = async (ev) => {
+    document.getElementById('ptcToolsCurrentClassDialog')?.remove();
+
     const isChecked = ev.target.checked;
     if (!isChecked) {
         return;
