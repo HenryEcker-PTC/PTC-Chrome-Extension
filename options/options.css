@@ -43,15 +43,3 @@ footer {
 h1.centered {
     text-align: center;
 }
-
-.editor-container {
-    margin: auto;
-}
-
-.editor-container, #common-feedback-editor {
-    width: 550px;
-}
-
-#common-feedback-editor {
-    height: 375px;
-}

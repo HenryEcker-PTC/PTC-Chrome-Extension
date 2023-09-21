@@ -1,7 +1,6 @@
 importScripts('./background-tasks/fetch-grades-bg.js');
 importScripts('./background-tasks/fetch-dates-for-register-bg.js');
 importScripts('./modules/moment.min.js');
-importScripts('./background-tasks/fetch-common-grade-feedback-html-bg.js');
 importScripts('./background-tasks/fetch-from-degreeworks-bg.js');
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -18,11 +17,9 @@ chrome.runtime.onInstalled.addListener(() => {
         enterFinalGradeD2LPattern: true,
         editAttendanceD2LPattern: true,
         attendanceRegisterCreateD2LPattern: true,
-        gradeFeedbackD2LPattern: true,
         enterZeroForMissingGrades: true,
         enterZeroForMissingGradebook: true,
         bulkDateManageForAssignments: true,
-        commonFeedbackHTML: '',
         sapAppealFetcher: false,
         changeOfMajorFetcher: false,
         apContractFormFetcher: false,
@@ -117,12 +114,6 @@ const patterns = [
         /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/lms\/attendance\/registers\/registers_newedit.d2l/,
         ['./modules/jquery-3.6.0.min.js', './foreground-tasks/attendance-register-generator-fg.js'],
         './register-gen/rg-popup.html'
-    ),
-    new PagePattern(
-        'gradeFeedbackD2LPattern',
-        /^https?:\/\/ptcsc\.desire2learn\.com\/d2l\/le\/activities\/iterator\//,
-        null,
-        './Common Grade Feedback Tools/common-feedback-popup.html'
     ),
     new PagePattern(
         'enterZeroForMissingGrades',
@@ -226,9 +217,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'fetch_pinned_courses' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         getPinnedCourses(sendResponse);
-    } else if (request.action === 'fetch_common_feedback_html' && request.from === 'popup') {
-        // eslint-disable-next-line no-undef
-        getCommonFeedbackHTML(sendResponse);
     } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
         // eslint-disable-next-line no-undef
         void getStudentSAPFields(request.pNumber, sendResponse);

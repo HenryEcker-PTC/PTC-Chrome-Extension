@@ -2,7 +2,7 @@
   "name": "PTC Tools",
   "description": "Collection of Tools For PTC",
   "author": "Henry Ecker (https://github.com/HenryEcker)",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "manifest_version": 3,
   "key": "aelhbikadpfbloieenjjonodemmaekfd",
   "background": {

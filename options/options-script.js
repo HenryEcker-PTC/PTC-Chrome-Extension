@@ -9,11 +9,9 @@ const bannerPattern = document.getElementById('bannerPattern');
 const enterFinalGradeD2LPattern = document.getElementById('enterFinalGradeD2LPattern');
 const editAttendanceD2LPattern = document.getElementById('editAttendanceD2LPattern');
 const attendanceRegisterCreateD2LPattern = document.getElementById('attendanceRegisterCreateD2LPattern');
-const gradeFeedbackD2LPattern = document.getElementById('gradeFeedbackD2LPattern');
 const enterZeroForMissingGrades = document.getElementById('enterZeroForMissingGrades');
 const enterZeroForMissingGradebook = document.getElementById('enterZeroForMissingGradebook');
 const bulkDateManageForAssignments = document.getElementById('bulkDateManageForAssignments');
-const commonFeedbackSave = document.getElementById('common-feedback-editor-save');
 const sapAppealFetcher = document.getElementById('sapAppealFetcher');
 const changeOfMajorFetcher = document.getElementById('changeOfMajorFetcher');
 const semesterWithdrawalFormFetcher = document.getElementById('semesterWithdrawalFormFetcher');
@@ -263,7 +261,7 @@ chrome.storage.sync.get([
     'A', 'B', 'C', 'D', 'S', 'M',
     'isAdjusted',
     'bannerPattern', 'enterFinalGradeD2LPattern', 'editAttendanceD2LPattern',
-    'attendanceRegisterCreateD2LPattern', 'gradeFeedbackD2LPattern',
+    'attendanceRegisterCreateD2LPattern',
     'enterZeroForMissingGrades', 'enterZeroForMissingGradebook',
     'bulkDateManageForAssignments', 'commonFeedbackHTML',
     'sapAppealFetcher', 'changeOfMajorFetcher', 'semesterWithdrawalFormFetcher', 'apContractFormFetcher', 'changeOfClassScheduleFormFetcher'
@@ -279,11 +277,9 @@ chrome.storage.sync.get([
     enterFinalGradeD2LPattern.checked = response.enterFinalGradeD2LPattern;
     editAttendanceD2LPattern.checked = response.editAttendanceD2LPattern;
     attendanceRegisterCreateD2LPattern.checked = response.attendanceRegisterCreateD2LPattern;
-    gradeFeedbackD2LPattern.checked = response.gradeFeedbackD2LPattern;
     enterZeroForMissingGrades.checked = response.enterZeroForMissingGrades;
     enterZeroForMissingGradebook.checked = response.enterZeroForMissingGradebook;
     bulkDateManageForAssignments.checked = response.bulkDateManageForAssignments;
-    quill.root.innerHTML = response.commonFeedbackHTML || '';
     sapAppealFetcher.checked = response.sapAppealFetcher;
     changeOfMajorFetcher.checked = response.changeOfMajorFetcher;
     semesterWithdrawalFormFetcher.checked = response.semesterWithdrawalFormFetcher;
@@ -330,7 +326,6 @@ document.getElementById('updateEnabledTools').addEventListener('click', () => {
             enterFinalGradeD2LPattern: enterFinalGradeD2LPattern.checked,
             editAttendanceD2LPattern: editAttendanceD2LPattern.checked,
             attendanceRegisterCreateD2LPattern: attendanceRegisterCreateD2LPattern.checked,
-            gradeFeedbackD2LPattern: gradeFeedbackD2LPattern.checked,
             enterZeroForMissingGrades: enterZeroForMissingGrades.checked,
             enterZeroForMissingGradebook: enterZeroForMissingGradebook.checked,
             bulkDateManageForAssignments: bulkDateManageForAssignments.checked,
@@ -342,10 +337,4 @@ document.getElementById('updateEnabledTools').addEventListener('click', () => {
         });
     }
     return true;
-});
-
-commonFeedbackSave.addEventListener('click', () => {
-    chrome.storage.sync.set({
-        commonFeedbackHTML: quill.root.innerHTML
-    });
 });
