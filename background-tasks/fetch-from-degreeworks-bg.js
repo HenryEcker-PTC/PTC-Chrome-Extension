@@ -153,8 +153,12 @@ const fetchStudentClassInformation = async (pNumber, school, degree) => {
             section,
             term,
             courseTitle,
-            attributeArray: [{value: crn}]
+            attributeArray
         } = classEntry;
+
+        const [{value: crn}] = attributeArray.filter(({code}) => {
+            return code.localeCompare('DWSISKEY') === 0
+        });
 
         return {
             ...acc,
