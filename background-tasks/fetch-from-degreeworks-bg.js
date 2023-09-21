@@ -152,6 +152,7 @@ const fetchStudentClassInformation = async (pNumber, school, degree) => {
             number,
             section,
             term,
+            transfer,
             courseTitle,
             attributeArray
         } = classEntry;
@@ -160,10 +161,12 @@ const fetchStudentClassInformation = async (pNumber, school, degree) => {
             return code.localeCompare('DWSISKEY') === 0
         });
 
-        return {
-            ...acc,
-            [crn]: {subject: discipline, number, section, term, courseTitle}
+        // Only include if it's a 'C' course (not transfer 'T')
+        if (transfer.localeCompare('C') === 0) {
+            acc[crn] = {subject: discipline, number, section, term, courseTitle};
         }
+
+        return acc;
     }, {});
 }
 
