@@ -178,7 +178,7 @@ const dropClassChangeHandler = async (ev) => {
 
     const value = getInputItem(inputIdMap.pNumberInput).value.toUpperCase().trim();
     if (value.length === 0) {
-        alert('Missing student P Number');
+        alert('Missing student P-Number');
         return;
     }
 
