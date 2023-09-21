@@ -1,51 +1,60 @@
-const getStudentSchoolAndDegree = async (pNumber) => {
-    const resData = await fetch(`https://degreeworks.ptc.edu/Dashboard/api/students?studentId=${pNumber}`)
-        .then((res) => {
-            return res.json();
-        });
+const destructureSchoolAndDegreeResponse = (resData) => {
+    try {
+        const {
+            _embedded: {
+                students: [
+                    {
+                        name,
+                        goals: [
+                            {
+                                school: {key: school},
+                                degree: {key: degree},
+                                details
+                            }
+                        ]
+                    }
+                ]
+            }
+        } = resData;
+        return {name, school, degree, details};
+    } catch (_) {
+        throw new Error("Initial response undefined");
+    }
+}
 
+const processDestructuredSchoolAndDegreeResponse = ({name, school, degree, details}) => {
     if (
-        resData?._embedded === undefined ||
-        resData._embedded?.students === undefined ||
-        resData._embedded.students.length === 0) {
-        throw new Error("Initial response undefined");
-    }
-    // Get Student
-    const student = resData._embedded.students[0];
-    // Get Student Name
-    if (student?.name === undefined) {
-        throw new Error("Initial response undefined");
-    }
-    const name = student.name;
-    // Get Student Goals Object
-    if (
-        student?.goals === undefined ||
-        student.goals.length === 0
+        name === undefined ||
+        school === undefined ||
+        degree === undefined ||
+        details === undefined ||
+        details.length === 0
     ) {
         throw new Error("Initial response undefined");
     }
-    const goal = student.goals[0];
-    // Get School Code
-    if (goal?.school === undefined) {
-        throw new Error("Initial response undefined");
-    }
-    const school = goal.school.key;
-    // Get Degree Code
-    if (goal?.degree === undefined) {
-        throw new Error("Initial response undefined");
-    }
-    const degree = goal.degree.key;
-    // Get Major Code
-    if (goal?.details === undefined) {
-        throw new Error("Initial response undefined");
-    }
-    const goalMajor = goal.details.filter(v => {
+
+    const goalMajor = details.filter(v => {
         return v.code.key.toLowerCase().localeCompare('major') === 0
     });
     if (goalMajor.length === 0) {
         throw new Error("Initial response undefined");
     }
     const majorCode = goalMajor[0].value.key;
+
+    return {name, school, degree, majorCode};
+}
+
+const getStudentSchoolAndDegree = async (pNumber) => {
+    const url = new URL('https://degreeworks.ptc.edu/Dashboard/api/students');
+    url.searchParams.set('studentId', pNumber);
+
+    const res = await fetch(url);
+    const resData = await res.json();
+
+    const {name, school, degree, majorCode} = processDestructuredSchoolAndDegreeResponse(
+        destructureSchoolAndDegreeResponse(resData)
+    );
+
     return {
         pNumber: pNumber,
         name: name,
@@ -53,33 +62,50 @@ const getStudentSchoolAndDegree = async (pNumber) => {
         degree: degree,
         majorCode: majorCode
     };
+
 };
 
+
+const destructureStudentAuditInformationResponse = (resData) => {
+    try {
+        const {
+            degreeInformation: {
+                reportArray
+            }
+        } = resData;
+
+        return {reportArray};
+    } catch (_) {
+        throw new Error("Audit response undefined");
+    }
+}
+
+const processDestructuredStudentAuditInformationResponse = ({reportArray}) => {
+    if (reportArray === undefined || reportArray.length === 0) {
+        throw new Error("Audit response undefined");
+    }
+    return {reportArray};
+}
+
 const fetchStudentAuditInformation = async (pNumber, school, degree, requestedFields) => {
-    const usp = new URLSearchParams();
-    usp.set('studentId', pNumber); // string
-    usp.set('school', school); // string
-    usp.set('degree', degree); // string
-    usp.set('is-process-new', true); // boolean
-    usp.set('audit-type', 'AA'); // string
-    usp.set('auditId', ''); // unknown
-    usp.set('include-inprogress', true); // boolean
-    usp.set('include-preregistered', true); // boolean
-    usp.set('aid-term', ''); // unknown
+    const url = new URL('https://degreeworks.ptc.edu/Dashboard/api/audit');
+    url.searchParams.set('studentId', pNumber); // string
+    url.searchParams.set('school', school); // string
+    url.searchParams.set('degree', degree); // string
+    url.searchParams.set('is-process-new', true); // boolean
+    url.searchParams.set('audit-type', 'AA'); // string
+    url.searchParams.set('auditId', ''); // unknown
+    url.searchParams.set('include-inprogress', true); // boolean
+    url.searchParams.set('include-preregistered', true); // boolean
+    url.searchParams.set('aid-term', ''); // unknown
 
-    const resData = await fetch(`https://degreeworks.ptc.edu/Dashboard/api/audit?${usp.toString()}`)
-        .then((res) => {
-            return res.json();
-        })
+    const res = await fetch(url);
+    const resData = await res.json();
 
-    if (resData?.degreeInformation === undefined) {
-        throw new Error("Audit response undefined");
-    }
-    const degreeInformation = resData.degreeInformation;
-    if (degreeInformation?.reportArray === undefined || degreeInformation.reportArray.length === 0) {
-        throw new Error("Audit response undefined");
-    }
-    const sapFields = degreeInformation.reportArray.filter((report) => {
+    const {reportArray} = processDestructuredStudentAuditInformationResponse(
+        destructureStudentAuditInformationResponse(resData)
+    );
+    const sapFields = reportArray.filter((report) => {
         return requestedFields.includes(report.code);
     });
     return sapFields.reduce((acc, report) => {
