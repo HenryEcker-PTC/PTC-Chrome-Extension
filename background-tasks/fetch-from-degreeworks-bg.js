@@ -218,7 +218,7 @@ const getStudentSAPFields = async (pNumberRequest, sendResponse) => {
     }
 };
 
-const getStudentBasicContactInfo = async (pNumberRequest, sendResponse) => {
+const getStudentInfo = async (pNumberRequest, sendResponse) => {
     try {
         const {pNumber, name, school, degree, majorCode} = await getStudentSchoolAndDegree(pNumberRequest);
         const {CELL_PHONE, HOME_PHONE} = await studentChangeOfMajorDetails(pNumber, school, degree);

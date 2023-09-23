@@ -204,40 +204,69 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
 });
 
 
+const handlePopupRequest = (request, sender, sendResponse) => {
+    switch (request.action) {
+        case 'get_popup_location': {
+            testPattern(request.tabInfo.url).then((pattern) => {
+                if (pattern) {
+                    sendResponse({location: pattern.UIPath});
+                } else {
+                    sendResponse({location: 'no%20op.html'});
+                }
+            });
+            break;
+        }
+        case 'fetch_patterns': {
+            sendResponse({success: true, patterns: patterns});
+            break;
+        }
+        case 'fetch_days_arg': {
+            fetchDays(request.start, request.date, request.weekdays, undefined, sendResponse);
+            break;
+        }
+    }
+}
+
+const handleForegroundRequest = (request, sender, sendResponse) => {
+    switch (request.action) {
+        case 'fetch_grades': {
+            getGrades(request.d2lid, request.isFinal, sendResponse);
+            break;
+        }
+        case 'fetch_pinned_courses': {
+            getPinnedCourses(sendResponse);
+            break;
+        }
+        case 'request_sap_details': {
+            void getStudentSAPFields(request.pNumber, sendResponse);
+            break;
+        }
+        case 'request_change_of_major_details':
+        case 'request_semester_withdrawal_details':
+        case 'request_semester_ap_contract_details':
+        case 'request_change_of_schedule_form_details':
+        case 'request_registration_outside_major_details': {
+            void getStudentInfo(request.pNumber, sendResponse);
+            break;
+        }
+        case 'request_student_class_details': {
+            void getStudentCourseInfo(request.pNumber, sendResponse);
+            break;
+        }
+    }
+}
+
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'get_popup_location' && request.from === 'popup') {
-        testPattern(request.tabInfo.url).then((pattern) => {
-            if (pattern) {
-                sendResponse({location: pattern.UIPath});
-            } else {
-                sendResponse({location: 'no%20op.html'});
-            }
-        });
-    } else if (request.action === 'fetch_grades' && request.from === 'foreground') {
-        // eslint-disable-next-line no-undef
-        getGrades(request.d2lid, request.isFinal, sendResponse);
-    } else if (request.action === 'fetch_patterns' && request.from === 'popup') {
-        sendResponse({success: true, patterns: patterns});
-    } else if (request.action === 'fetch_days_arg' && request.from === 'popup') {
-        // eslint-disable-next-line no-undef
-        fetchDays(request.start, request.date, request.weekdays, undefined, sendResponse);
-    } else if (request.action === 'fetch_pinned_courses' && request.from === 'foreground') {
-        // eslint-disable-next-line no-undef
-        getPinnedCourses(sendResponse);
-    } else if (request.action === 'request_sap_details' && request.from === 'foreground') {
-        // eslint-disable-next-line no-undef
-        void getStudentSAPFields(request.pNumber, sendResponse);
-    } else if ([
-        'request_change_of_major_details',
-        'request_semester_withdrawal_details',
-        'request_semester_ap_contract_details',
-        'request_change_of_schedule_form_details',
-        'request_registration_outside_major_details'
-    ].includes(request.action) && request.from === 'foreground') {
-        // eslint-disable-next-line no-undef
-        void getStudentBasicContactInfo(request.pNumber, sendResponse);
-    } else if (request.action === 'request_student_class_details' && request.from === 'foreground') {
-        void getStudentCourseInfo(request.pNumber, sendResponse);
+    switch (request.from) {
+        case 'popup': {
+            handlePopupRequest(request, sender, sendResponse);
+            break;
+        }
+        case 'foreground': {
+            handleForegroundRequest(request, sender, sendResponse);
+            break;
+        }
     }
     return true;
 });
